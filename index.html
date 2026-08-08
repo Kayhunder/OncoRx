@@ -3223,6 +3223,1394 @@ Sent through the OncoRx website.`
       }
     );
   </script>
+  <script>
+/* ============================================================
+   ONCORX STORY READER
+   Turns existing cards into individual story pages.
+
+   No separate HTML files are required.
+   Stories are addressable through:
+   #story/story-slug
+============================================================ */
+
+(function () {
+  "use strict";
+
+  /* ----------------------------------------------------------
+     STORY CONTENT
+  ---------------------------------------------------------- */
+
+  const storyOverrides = {
+
+    /* ================= MEDICINES ================= */
+
+    "targeted-oncology-agents": {
+      category: "Cancer Medicines",
+      subtitle:
+        "Medicines designed to act on specific molecular targets or pathways involved in cancer growth.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Targeted oncology agents are medicines designed to interfere with specific molecules, proteins or biological pathways that contribute to cancer growth and survival. Unlike conventional cytotoxic chemotherapy, many targeted medicines are developed around particular molecular characteristics of a tumour."
+        },
+        {
+          heading: "Examples",
+          text:
+            "Important groups include kinase inhibitors, PARP inhibitors and hormone-directed medicines. The appropriate medicine depends on the cancer type, molecular findings, treatment goals and the individual's clinical circumstances."
+        },
+        {
+          heading: "Why molecular information matters",
+          text:
+            "Some targeted treatments are only useful when a particular molecular target or biomarker is present. Molecular testing can therefore help the oncology team determine whether a targeted approach is appropriate."
+        },
+        {
+          heading: "Monitoring and safety",
+          text:
+            "Targeted medicines can have important adverse effects and drug interactions. Monitoring requirements vary by medicine and may include blood tests, cardiovascular assessment, liver or kidney function monitoring and assessment of treatment-specific symptoms."
+        }
+      ],
+      keyPoints: [
+        "Kinase inhibitors",
+        "PARP inhibitors",
+        "Hormone-directed medicines",
+        "Biomarker-guided treatment",
+        "Treatment-specific monitoring"
+      ]
+    },
+
+    "immunotherapy-biologics": {
+      category: "Cancer Medicines",
+      subtitle:
+        "Biological medicines and immunotherapies that help the immune system recognize or respond to cancer.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Immunotherapy and biological medicines represent an important part of modern cancer treatment. These approaches can influence the immune system, recognize specific biological targets or deliver treatment selectively to cancer cells."
+        },
+        {
+          heading: "Immune checkpoint inhibitors",
+          text:
+            "Immune checkpoint inhibitors can enhance immune activity against cancer by blocking signals that would otherwise suppress immune responses. Their use depends on the cancer type, treatment setting and relevant clinical or molecular characteristics."
+        },
+        {
+          heading: "Monoclonal antibodies",
+          text:
+            "Monoclonal antibodies are engineered proteins designed to recognize specific targets. Some directly interfere with cancer biology, while others recruit immune mechanisms or deliver another therapeutic component."
+        },
+        {
+          heading: "Safety considerations",
+          text:
+            "Because some immunotherapies alter immune activity, they can produce immune-related adverse effects involving organs such as the skin, bowel, liver, lungs or endocrine system. New or unusual symptoms should be assessed promptly by the treating team."
+        }
+      ],
+      keyPoints: [
+        "Immune checkpoint inhibitors",
+        "Monoclonal antibodies",
+        "Antibody-drug conjugates",
+        "Immune-related adverse effects",
+        "Biomarker-guided treatment"
+      ]
+    },
+
+    "chemotherapy": {
+      category: "Cancer Medicines",
+      subtitle:
+        "Cytotoxic medicines used alone or in combination to treat many different cancers.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Chemotherapy refers to medicines that interfere with the growth, division or survival of rapidly dividing cells. It remains an important component of treatment for many cancers and may be used before surgery, after surgery, alongside radiation or as treatment for advanced disease."
+        },
+        {
+          heading: "Treatment combinations",
+          text:
+            "Oncology teams frequently combine medicines with different mechanisms of action to improve treatment effectiveness while managing toxicity. The choice of regimen depends on the cancer type, stage, treatment intent and patient-specific factors."
+        },
+        {
+          heading: "Treatment cycles",
+          text:
+            "Chemotherapy is often administered in cycles. Treatment periods are followed by planned recovery periods that allow healthy tissues to recover before the next cycle."
+        },
+        {
+          heading: "Managing adverse effects",
+          text:
+            "Common treatment-related effects can include fatigue, nausea, changes in blood counts, mucositis, appetite changes, hair loss and increased infection risk. Supportive medicines and monitoring can help reduce complications and improve treatment tolerance."
+        }
+      ],
+      keyPoints: [
+        "Combination chemotherapy",
+        "Treatment cycles",
+        "Blood-count monitoring",
+        "Nausea and symptom management",
+        "Infection-risk assessment"
+      ]
+    },
+
+    "supportive-medicines": {
+      category: "Cancer Medicines",
+      subtitle:
+        "Medicines used to prevent, reduce or manage symptoms and complications associated with cancer and its treatment.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Supportive medicines are an essential part of comprehensive oncology care. They do not necessarily treat the cancer itself, but they can prevent complications, control symptoms and help patients tolerate treatment."
+        },
+        {
+          heading: "Common roles",
+          text:
+            "Supportive treatment can include medicines for nausea and vomiting, pain, constipation, diarrhoea, infection prevention, bone health and other treatment-related complications."
+        },
+        {
+          heading: "Individualized care",
+          text:
+            "The appropriate supportive regimen depends on the patient's cancer treatment, symptoms, existing medicines, kidney and liver function, and other health considerations."
+        },
+        {
+          heading: "Medication review",
+          text:
+            "Supportive medicines can interact with anticancer treatments and other medicines. A pharmacist or other qualified healthcare professional can help review the complete medication list and identify potential problems."
+        }
+      ],
+      keyPoints: [
+        "Symptom management",
+        "Prevention of treatment complications",
+        "Pain management",
+        "Nausea and vomiting management",
+        "Medication review"
+      ]
+    },
+
+    /* ================= TREATMENTS ================= */
+
+    "surgery": {
+      category: "Cancer Treatment",
+      subtitle:
+        "Surgical treatment may remove tumours, obtain tissue for diagnosis or manage complications.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Surgery is one of the major treatment approaches used in cancer care. Depending on the cancer, an operation may aim to remove the tumour completely, reduce tumour burden, establish a diagnosis or relieve symptoms."
+        },
+        {
+          heading: "Role in treatment",
+          text:
+            "Surgery may be used alone or combined with chemotherapy, radiation therapy, targeted treatment or immunotherapy. The sequence depends on the cancer and the treatment plan."
+        },
+        {
+          heading: "Before and after surgery",
+          text:
+            "Pre-operative assessment, medication review, nutrition and recovery planning are important parts of safe surgical care. Follow-up may include pathology review and additional treatment where indicated."
+        }
+      ]
+    },
+
+    "radiation-therapy": {
+      category: "Cancer Treatment",
+      subtitle:
+        "Carefully planned radiation used to treat cancer cells or control symptoms.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Radiation therapy uses high-energy radiation to damage cancer cells. It can be used with curative intent, as part of combined treatment or to relieve symptoms caused by cancer."
+        },
+        {
+          heading: "How it is used",
+          text:
+            "Radiation may be delivered externally or through other specialized techniques. Treatment planning is carefully designed to target the tumour while limiting exposure to surrounding healthy tissue."
+        },
+        {
+          heading: "Side effects",
+          text:
+            "Adverse effects depend on the area being treated, the dose and the treatment schedule. The oncology team provides monitoring and supportive care throughout treatment."
+        }
+      ]
+    },
+
+    "systemic-therapy": {
+      category: "Cancer Treatment",
+      subtitle:
+        "Medicines that act throughout the body, including chemotherapy, targeted medicines and immunotherapy.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Systemic therapy refers to cancer treatment that travels through the bloodstream and can therefore act on cancer cells throughout the body."
+        },
+        {
+          heading: "Major approaches",
+          text:
+            "Systemic treatment includes chemotherapy, targeted medicines, hormone-directed therapy, immunotherapy and other anticancer medicines."
+        },
+        {
+          heading: "Treatment selection",
+          text:
+            "Treatment selection can depend on cancer type, stage, biomarkers, previous treatment, treatment intent and individual patient factors."
+        }
+      ]
+    },
+
+    "supportive-care": {
+      category: "Cancer Treatment",
+      subtitle:
+        "Care focused on symptoms, treatment side effects, wellbeing and quality of life.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Supportive care helps people live as well as possible during cancer treatment. It can be provided alongside anticancer treatment rather than only after active treatment has finished."
+        },
+        {
+          heading: "What it can include",
+          text:
+            "Supportive care may address pain, nausea, fatigue, nutrition, emotional wellbeing, sleep, mobility, medication problems and other challenges associated with cancer."
+        },
+        {
+          heading: "A multidisciplinary approach",
+          text:
+            "Doctors, pharmacists, nurses, dietitians, psychologists, physiotherapists and other professionals may contribute to supportive cancer care."
+        }
+      ]
+    },
+
+    /* ================= CANCER TYPES ================= */
+
+    "solid-tumors": {
+      category: "Cancer Types",
+      subtitle:
+        "Cancers that form solid masses in organs or tissues.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Solid tumours develop in organs or tissues and include many common cancers such as breast, lung, colorectal and prostate cancers."
+        },
+        {
+          heading: "Treatment",
+          text:
+            "Treatment depends on the organ involved, cancer subtype, stage and molecular characteristics. Surgery, radiation, systemic therapy or combinations may be used."
+        }
+      ]
+    },
+
+    "blood-cancers": {
+      category: "Cancer Types",
+      subtitle:
+        "Cancers affecting blood-forming tissues, blood cells and the immune system.",
+      sections: [
+        {
+          heading: "Overview",
+          text:
+            "Blood cancers include conditions such as leukemia, lymphoma and myeloma. They differ from many solid tumours because the malignant cells arise within blood-forming or lymphatic tissues."
+        },
+        {
+          heading: "Treatment",
+          text:
+            "Treatment can include chemotherapy, targeted medicines, immunotherapy, transplantation and other specialized approaches depending on the diagnosis."
+        }
+      ]
+    },
+
+    /* ================= GUIDE ================= */
+
+    "understanding-cancer": {
+      category: "Cancer Guide",
+      subtitle:
+        "A foundation for understanding what cancer is and how it develops.",
+      sections: [
+        {
+          heading: "What is cancer?",
+          text:
+            "Cancer is a broad group of diseases in which abnormal cells grow and divide in an uncontrolled way. Different cancers can behave very differently, which is why diagnosis and treatment are highly individualized."
+        },
+        {
+          heading: "Why cancers differ",
+          text:
+            "Cancer behaviour can depend on the tissue of origin, genetic changes, stage, grade and other biological characteristics."
+        }
+      ]
+    },
+
+    "cancer-types": {
+      category: "Cancer Guide",
+      subtitle:
+        "Explore the different cancers affecting organs, tissues and blood-forming systems.",
+      sections: [
+        {
+          heading: "A broad disease group",
+          text:
+            "Cancer is not one disease. Different cancers have different biology, patterns of spread, treatment options and outcomes."
+        },
+        {
+          heading: "Why classification matters",
+          text:
+            "Accurate classification helps healthcare professionals determine appropriate investigations and treatment strategies."
+        }
+      ]
+    },
+
+    "diagnosis-staging": {
+      category: "Cancer Guide",
+      subtitle:
+        "Understand common diagnostic tests, pathology, imaging and cancer staging.",
+      sections: [
+        {
+          heading: "Diagnosis",
+          text:
+            "Cancer diagnosis can involve clinical assessment, laboratory tests, imaging and examination of tissue by pathology specialists."
+        },
+        {
+          heading: "Staging",
+          text:
+            "Staging describes the extent of cancer in the body and helps guide treatment planning and discussions about prognosis."
+        }
+      ]
+    },
+
+    "cancer-treatment": {
+      category: "Cancer Guide",
+      subtitle:
+        "An introduction to the major approaches used in modern cancer treatment.",
+      sections: [
+        {
+          heading: "Treatment approaches",
+          text:
+            "Cancer treatment can involve surgery, radiation therapy, systemic medicines, supportive care or combinations of these approaches."
+        },
+        {
+          heading: "Personalized treatment",
+          text:
+            "Treatment decisions depend on cancer type, stage, biomarkers, previous treatment and the patient's preferences and overall circumstances."
+        }
+      ]
+    },
+
+    "treatment-decisions": {
+      category: "Cancer Guide",
+      subtitle:
+        "How cancer type, stage, biomarkers and patient factors influence treatment choices.",
+      sections: [
+        {
+          heading: "Multiple factors",
+          text:
+            "Cancer treatment decisions rarely depend on a single factor. Clinicians consider the cancer diagnosis, stage, molecular findings, previous treatment and the individual's overall health."
+        },
+        {
+          heading: "Shared decisions",
+          text:
+            "Patients may have more than one reasonable treatment option. Discussions with the healthcare team help balance potential benefits, risks, practical considerations and personal goals."
+        }
+      ]
+    },
+
+    "living-through-treatment": {
+      category: "Cancer Guide",
+      subtitle:
+        "Practical information about treatment effects, supportive care and quality of life.",
+      sections: [
+        {
+          heading: "During treatment",
+          text:
+            "Cancer treatment can affect physical health, emotions, work, relationships and everyday routines. Supportive care can help address these challenges."
+        },
+        {
+          heading: "Communication",
+          text:
+            "Keeping an updated list of medicines and symptoms can help patients communicate effectively with their healthcare team."
+        }
+      ]
+    }
+  };
+
+
+  /* ----------------------------------------------------------
+     HELPERS
+  ---------------------------------------------------------- */
+
+  function slugify(text) {
+    return String(text || "")
+      .toLowerCase()
+      .trim()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
+  function escapeHTML(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function currentPageId() {
+    const active = document.querySelector(".page.active");
+    return active ? active.id : "home";
+  }
+
+
+  /* ----------------------------------------------------------
+     BUILD STORY READER
+  ---------------------------------------------------------- */
+
+  function createStoryReader() {
+
+    if (document.getElementById("oncorxStoryPage")) return;
+
+    const storyPage = document.createElement("section");
+
+    storyPage.id = "oncorxStoryPage";
+    storyPage.className = "page oncorx-story-page";
+
+    storyPage.innerHTML = `
+      <div class="inner-page">
+
+        <button
+          type="button"
+          class="back-button oncorx-story-back"
+          id="oncorxStoryBack">
+          ← Back
+        </button>
+
+        <article class="oncorx-story">
+
+          <header class="oncorx-story-header">
+
+            <div
+              class="section-kicker"
+              id="oncorxStoryCategory">
+            </div>
+
+            <h1 id="oncorxStoryTitle"></h1>
+
+            <p
+              class="oncorx-story-subtitle"
+              id="oncorxStorySubtitle">
+            </p>
+
+            <div
+              class="oncorx-story-meta"
+              id="oncorxStoryMeta">
+            </div>
+
+          </header>
+
+          <div
+            class="oncorx-story-divider">
+          </div>
+
+          <div
+            class="oncorx-story-body"
+            id="oncorxStoryBody">
+          </div>
+
+          <aside
+            class="oncorx-story-note">
+            <strong>Important note</strong>
+            <p>
+              This educational content is intended to support
+              conversations with qualified healthcare professionals.
+              It is not a substitute for individualized medical advice,
+              diagnosis or treatment.
+            </p>
+          </aside>
+
+          <button
+            type="button"
+            class="btn btn-secondary oncorx-bottom-back"
+            id="oncorxBottomBack">
+            ← Back to section
+          </button>
+
+        </article>
+
+      </div>
+    `;
+
+    const main = document.querySelector("main");
+
+    if (main) {
+      main.appendChild(storyPage);
+    }
+  }
+
+
+  /* ----------------------------------------------------------
+     STYLING
+  ---------------------------------------------------------- */
+
+  function addStoryStyles() {
+
+    if (document.getElementById("oncorxStoryStyles")) return;
+
+    const style = document.createElement("style");
+
+    style.id = "oncorxStoryStyles";
+
+    style.textContent = `
+      /* =====================================================
+         ONCORX STORY READER
+      ===================================================== */
+
+      .oncorx-story-card {
+        cursor: pointer;
+        position: relative;
+        transition:
+          transform .22s ease,
+          box-shadow .22s ease,
+          border-color .22s ease;
+      }
+
+      .oncorx-story-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+        border-color: #9fc5d5;
+      }
+
+      .oncorx-story-card:focus-visible {
+        outline: 3px solid rgba(47,111,149,.25);
+        outline-offset: 3px;
+      }
+
+      .oncorx-story-card .oncorx-read-more {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 22px;
+        padding-top: 14px;
+        border-top: 1px solid var(--line);
+        color: var(--blue);
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .04em;
+      }
+
+      .oncorx-story-card .oncorx-read-arrow {
+        transition: transform .2s ease;
+      }
+
+      .oncorx-story-card:hover .oncorx-read-arrow {
+        transform: translateX(4px);
+      }
+
+      .oncorx-story-page {
+        min-height: 70vh;
+      }
+
+      .oncorx-story {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 46px 52px 56px;
+        background: rgba(255,255,255,.98);
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+      }
+
+      .oncorx-story-header h1 {
+        margin: 10px 0 16px;
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
+        font-size: clamp(2.5rem, 5vw, 4.4rem);
+        line-height: 1.06;
+        letter-spacing: -.035em;
+      }
+
+      .oncorx-story-subtitle {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 1.12rem;
+        line-height: 1.7;
+      }
+
+      .oncorx-story-meta {
+        margin-top: 20px;
+        color: #78909c;
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+      }
+
+      .oncorx-story-divider {
+        height: 1px;
+        margin: 34px 0;
+        background: var(--line);
+      }
+
+      .oncorx-story-body {
+        color: var(--ink);
+        font-size: 1.04rem;
+        line-height: 1.85;
+      }
+
+      .oncorx-story-body p {
+        margin: 0 0 25px;
+      }
+
+      .oncorx-story-body h2 {
+        margin: 42px 0 13px;
+        font-family:
+          Georgia,
+          "Times New Roman",
+          serif;
+        font-size: 1.75rem;
+        line-height: 1.2;
+      }
+
+      .oncorx-story-body ul {
+        margin: 0 0 28px;
+        padding-left: 23px;
+        color: var(--muted);
+      }
+
+      .oncorx-story-body li {
+        margin-bottom: 10px;
+      }
+
+      .oncorx-story-lead {
+        font-size: 1.18rem;
+        color: #476775;
+      }
+
+      .oncorx-story-note {
+        margin-top: 44px;
+        padding: 22px 24px;
+        border-left: 4px solid var(--blue);
+        border-radius: 0 14px 14px 0;
+        background: var(--blue-pale);
+      }
+
+      .oncorx-story-note strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .oncorx-story-note p {
+        margin: 0;
+        color: var(--muted);
+        font-size: .9rem;
+      }
+
+      .oncorx-bottom-back {
+        margin-top: 28px;
+      }
+
+      @media (max-width: 700px) {
+
+        .oncorx-story {
+          padding: 30px 22px 38px;
+          border-radius: 20px;
+        }
+
+        .oncorx-story-header h1 {
+          font-size: 2.35rem;
+        }
+
+        .oncorx-story-body {
+          font-size: 1rem;
+        }
+
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+
+  /* ----------------------------------------------------------
+     BUILD DEFAULT STORY FROM EXISTING CARD
+  ---------------------------------------------------------- */
+
+  function getCardStory(card) {
+
+    const heading =
+      card.querySelector("h2, h3");
+
+    if (!heading) return null;
+
+    const title =
+      heading.textContent.trim();
+
+    if (!title) return null;
+
+    const slug =
+      slugify(title);
+
+    const section =
+      card.closest(".page")?.id || "home";
+
+    const paragraphs =
+      [...card.querySelectorAll("p")]
+        .map(p => p.textContent.trim())
+        .filter(Boolean);
+
+    const bullets =
+      [...card.querySelectorAll("li")]
+        .map(li => li.textContent.trim())
+        .filter(Boolean);
+
+    if (storyOverrides[slug]) {
+
+      return {
+        id: slug,
+        title,
+        section,
+        ...storyOverrides[slug]
+      };
+    }
+
+    const description =
+      paragraphs[0] ||
+      `Explore this OncoRx topic in greater detail.`;
+
+    return {
+      id: slug,
+      title,
+      category: getSectionLabel(section),
+      subtitle: description,
+      sections: [
+        {
+          heading: "Overview",
+          text: description
+        },
+        ...(paragraphs.slice(1).map((text, index) => ({
+          heading:
+            index === 0
+              ? "What to know"
+              : "Further information",
+          text
+        })))
+      ],
+      keyPoints: bullets
+    };
+  }
+
+
+  function getSectionLabel(section) {
+
+    const labels = {
+      home: "OncoRx",
+      guide: "Cancer Guide",
+      types: "Cancer Types",
+      treatments: "Cancer Treatment",
+      medicines: "Cancer Medicines",
+      resources: "Patient Resources",
+      professionals: "Healthcare Professionals",
+      insights: "Clinical Insights",
+      about: "About OncoRx"
+    };
+
+    return labels[section] || "OncoRx";
+  }
+
+
+  /* ----------------------------------------------------------
+     COLLECT CARDS
+  ---------------------------------------------------------- */
+
+  const stories = {};
+
+  function registerCards() {
+
+    document
+      .querySelectorAll(
+        ".page:not(#oncorxStoryPage) .content-card, " +
+        ".page:not(#oncorxStoryPage) .guide-card"
+      )
+      .forEach(card => {
+
+        const story =
+          getCardStory(card);
+
+        if (!story) return;
+
+        stories[story.id] = story;
+
+        card.classList.add("oncorx-story-card");
+
+        card.setAttribute("tabindex", "0");
+        card.setAttribute("role", "button");
+        card.setAttribute(
+          "aria-label",
+          "Read " + story.title
+        );
+
+        if (!card.querySelector(".oncorx-read-more")) {
+
+          const readMore =
+            document.createElement("div");
+
+          readMore.className =
+            "oncorx-read-more";
+
+          readMore.innerHTML = `
+            <span>Read full story</span>
+            <span class="oncorx-read-arrow">→</span>
+          `;
+
+          card.appendChild(readMore);
+        }
+
+        card.addEventListener(
+          "click",
+          function () {
+
+            /*
+              Do not interrupt the content manager.
+            */
+            if (
+              document.body.classList.contains(
+                "manager-mode"
+              )
+            ) {
+              return;
+            }
+
+            openStory(story.id);
+          }
+        );
+
+        card.addEventListener(
+          "keydown",
+          function (event) {
+
+            if (
+              document.body.classList.contains(
+                "manager-mode"
+              )
+            ) {
+              return;
+            }
+
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+              event.preventDefault();
+              openStory(story.id);
+            }
+          }
+        );
+      });
+  }
+
+
+  /* ----------------------------------------------------------
+     OPEN STORY
+  ---------------------------------------------------------- */
+
+  let previousStoryPage = "home";
+
+  function openStory(storyId, updateURL = true) {
+
+    const story =
+      stories[storyId];
+
+    if (!story) return;
+
+    previousStoryPage =
+      currentPageId();
+
+    if (
+      previousStoryPage ===
+      "oncorxStoryPage"
+    ) {
+      previousStoryPage = "home";
+    }
+
+    const page =
+      document.getElementById(
+        "oncorxStoryPage"
+      );
+
+    if (!page) return;
+
+    document
+      .querySelectorAll(".page")
+      .forEach(p =>
+        p.classList.remove("active")
+      );
+
+    page.classList.add("active");
+
+    document
+      .getElementById(
+        "oncorxStoryCategory"
+      )
+      .textContent =
+      story.category ||
+      "OncoRx";
+
+    document
+      .getElementById(
+        "oncorxStoryTitle"
+      )
+      .textContent =
+      story.title;
+
+    document
+      .getElementById(
+        "oncorxStorySubtitle"
+      )
+      .textContent =
+      story.subtitle || "";
+
+    document
+      .getElementById(
+        "oncorxStoryMeta"
+      )
+      .textContent =
+      "OncoRx · " +
+      (story.category || "Cancer information");
+
+    renderStoryBody(story);
+
+    const back =
+      document.getElementById(
+        "oncorxStoryBack"
+      );
+
+    const bottomBack =
+      document.getElementById(
+        "oncorxBottomBack"
+      );
+
+    back.onclick =
+      closeStory;
+
+    bottomBack.onclick =
+      closeStory;
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    if (updateURL) {
+
+      history.pushState(
+        {
+          type: "oncorx-story",
+          story: storyId,
+          previousPage:
+            previousStoryPage
+        },
+        "",
+        "#story/" + storyId
+      );
+    }
+  }
+
+
+  /* ----------------------------------------------------------
+     STORY BODY
+  ---------------------------------------------------------- */
+
+  function renderStoryBody(story) {
+
+    const body =
+      document.getElementById(
+        "oncorxStoryBody"
+      );
+
+    let html = "";
+
+    if (story.sections?.length) {
+
+      story.sections.forEach(
+        (section, index) => {
+
+          html += `
+            <section class="oncorx-story-section">
+
+              <h2>
+                ${escapeHTML(
+                  section.heading
+                )}
+              </h2>
+
+              <p class="${
+                index === 0
+                  ? "oncorx-story-lead"
+                  : ""
+              }">
+                ${escapeHTML(
+                  section.text
+                )}
+              </p>
+
+            </section>
+          `;
+        }
+      );
+
+    } else {
+
+      html += `
+        <p class="oncorx-story-lead">
+          ${escapeHTML(
+            story.subtitle ||
+            "Explore this topic in greater detail."
+          )}
+        </p>
+      `;
+    }
+
+    if (
+      story.keyPoints &&
+      story.keyPoints.length
+    ) {
+
+      html += `
+        <section>
+          <h2>Key points</h2>
+
+          <ul>
+            ${story.keyPoints
+              .map(
+                point =>
+                  `<li>${escapeHTML(point)}</li>`
+              )
+              .join("")}
+          </ul>
+        </section>
+      `;
+    }
+
+    body.innerHTML = html;
+  }
+
+
+  /* ----------------------------------------------------------
+     CLOSE STORY
+  ---------------------------------------------------------- */
+
+  function closeStory() {
+
+    const destination =
+      previousStoryPage &&
+      previousStoryPage !==
+      "oncorxStoryPage"
+        ? previousStoryPage
+        : "home";
+
+    if (
+      typeof window.showPage ===
+      "function"
+    ) {
+      window.showPage(destination);
+    } else {
+      document
+        .querySelectorAll(".page")
+        .forEach(p =>
+          p.classList.remove("active")
+        );
+
+      const target =
+        document.getElementById(
+          destination
+        );
+
+      if (target) {
+        target.classList.add("active");
+      }
+    }
+
+    history.pushState(
+      {
+        type: "oncorx-page",
+        page: destination
+      },
+      "",
+      "#" + destination
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+
+  /* ----------------------------------------------------------
+     DIRECT STORY URL SUPPORT
+  ---------------------------------------------------------- */
+
+  function loadStoryFromHash() {
+
+    const hash =
+      window.location.hash
+        .replace("#", "")
+        .trim();
+
+    if (!hash.startsWith("story/")) {
+      return false;
+    }
+
+    const storyId =
+      hash
+        .replace("story/", "")
+        .trim();
+
+    if (stories[storyId]) {
+
+      previousStoryPage =
+        history.state?.previousPage ||
+        "home";
+
+      openStory(
+        storyId,
+        false
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
+
+  /* ----------------------------------------------------------
+     BROWSER NAVIGATION
+  ---------------------------------------------------------- */
+
+  window.addEventListener(
+    "hashchange",
+    function () {
+
+      if (
+        loadStoryFromHash()
+      ) {
+        return;
+      }
+
+      const hash =
+        window.location.hash
+          .replace("#", "")
+          .trim();
+
+      if (
+        hash &&
+        typeof window.showPage ===
+        "function"
+      ) {
+        window.showPage(hash);
+      }
+    }
+  );
+
+
+  window.addEventListener(
+    "popstate",
+    function () {
+
+      if (
+        loadStoryFromHash()
+      ) {
+        return;
+      }
+
+      const hash =
+        window.location.hash
+          .replace("#", "")
+          .trim();
+
+      if (
+        hash &&
+        typeof window.showPage ===
+        "function"
+      ) {
+        window.showPage(hash);
+      }
+    }
+  );
+
+
+  /* ----------------------------------------------------------
+     START
+  ---------------------------------------------------------- */
+
+  function initializeStorySystem() {
+
+    createStoryReader();
+
+    addStoryStyles();
+
+    registerCards();
+
+    /*
+      Give the existing homepage cards the same
+      story behaviour where applicable.
+    */
+
+    document
+      .querySelectorAll(
+        ".home-section .info-card"
+      )
+      .forEach(card => {
+
+        const heading =
+          card.querySelector("h3");
+
+        if (!heading) return;
+
+        const title =
+          heading.textContent.trim();
+
+        const slug =
+          slugify(title);
+
+        if (!stories[slug]) {
+
+          stories[slug] = {
+            id: slug,
+            title,
+            category:
+              "OncoRx Guide",
+            subtitle:
+              card.querySelector("p")
+                ?.textContent
+                .trim() ||
+              "Explore this OncoRx topic.",
+            sections: [
+              {
+                heading: "Overview",
+                text:
+                  card.querySelector("p")
+                    ?.textContent
+                    .trim() ||
+                  "Explore this topic in greater detail."
+              }
+            ]
+          };
+        }
+
+        card.classList.add(
+          "oncorx-story-card"
+        );
+
+        card.setAttribute(
+          "tabindex",
+          "0"
+        );
+
+        card.setAttribute(
+          "role",
+          "button"
+        );
+
+        card.setAttribute(
+          "aria-label",
+          "Read " + title
+        );
+
+        if (
+          !card.querySelector(
+            ".oncorx-read-more"
+          )
+        ) {
+
+          const readMore =
+            document.createElement("div");
+
+          readMore.className =
+            "oncorx-read-more";
+
+          readMore.innerHTML = `
+            <span>Read full story</span>
+            <span class="oncorx-read-arrow">→</span>
+          `;
+
+          card.appendChild(
+            readMore
+          );
+        }
+
+        card.addEventListener(
+          "click",
+          () => {
+
+            if (
+              document.body.classList.contains(
+                "manager-mode"
+              )
+            ) {
+              return;
+            }
+
+            openStory(slug);
+          }
+        );
+
+        card.addEventListener(
+          "keydown",
+          event => {
+
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+
+              if (
+                document.body.classList.contains(
+                  "manager-mode"
+                )
+              ) {
+                return;
+              }
+
+              event.preventDefault();
+
+              openStory(slug);
+            }
+          }
+        );
+      });
+
+
+    /*
+      If somebody opens:
+      #story/chemotherapy
+
+      directly, load it.
+    */
+
+    setTimeout(
+      loadStoryFromHash,
+      0
+    );
+  }
+
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeStorySystem
+    );
+
+  } else {
+
+    initializeStorySystem();
+
+  }
+
+})();
+</script>
 
 </body>
 </html>
