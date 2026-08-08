@@ -3008,11 +3008,30 @@
         "#" + pageId
       );
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-    }
+      const storyPageElement =
+  document.getElementById("oncorxStoryPage");
+
+if (storyPageElement) {
+
+  const header =
+    document.querySelector("header");
+
+  const headerHeight =
+    header
+      ? header.getBoundingClientRect().height
+      : 0;
+
+  const storyTop =
+    storyPageElement.getBoundingClientRect().top +
+    window.scrollY -
+    headerHeight -
+    12;
+
+  window.scrollTo({
+    top: Math.max(0, storyTop),
+    behavior: "smooth"
+  });
+}
 
 
     function loadInitialPage() {
