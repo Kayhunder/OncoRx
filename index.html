@@ -1304,56 +1304,280 @@
         Onco<span>Rx</span>
       </a>
 
-     <button
-  class="mobile-menu-toggle"
-  id="mobileMenuToggle"
-  type="button"
-  aria-label="Open navigation"
-  aria-expanded="false"
-  aria-controls="mainNav"
->
-  <span></span>
-  <span></span>
-  <span></span>
-</button>
+     /* =========================================================
+   ONCORX — EXTRA COMPACT MOBILE NAVIGATION
+========================================================= */
 
-<nav id="mainNav">
-  <a href="#home"
-     data-page="home"
-     onclick="showPage('home'); closeMobileMenu(); return false;">
-    Home
-  </a>
+@media (max-width: 760px) {
 
-  <a href="#about"
-     data-page="about"
-     onclick="showPage('about'); closeMobileMenu(); return false;">
-    About
-  </a>
+  /* Compact header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 6000;
 
-  <a href="#medicines"
-     data-page="medicines"
-     onclick="showPage('medicines'); closeMobileMenu(); return false;">
-    Medicines
-  </a>
+    min-height: 48px;
 
-  <a href="#guide"
-     data-page="guide"
-     onclick="showPage('guide'); closeMobileMenu(); return false;">
-    Cancer & Treatment Guide
-  </a>
+    box-shadow:
+      0 2px 10px rgba(30, 70, 90, 0.08);
+  }
 
-  <a href="#insights"
-     data-page="insights"
-     onclick="showPage('insights'); closeMobileMenu(); return false;">
-    Insights
-  </a>
+  .nav-container {
+    min-height: 48px;
 
-  <a href="#contact"
-     data-page="contact"
-     onclick="showPage('contact'); closeMobileMenu(); return false;">
-    Get in Touch
-  </a>
-</nav>
+    height: 48px;
+
+    padding:
+      5px 11px;
+
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+  }
+
+
+  /* Smaller OncoRx logo */
+  .brand {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+
+  /* Tiny hamburger */
+  .mobile-menu-toggle {
+    display: flex;
+
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    padding: 0;
+
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    background: #fff;
+
+    gap: 4px;
+  }
+
+  .mobile-menu-toggle span {
+    width: 16px;
+    height: 1.5px;
+  }
+
+
+  /* =======================================================
+     COMPACT DROPDOWN
+  ======================================================= */
+
+  nav#mainNav {
+
+    position: absolute;
+
+    top: calc(100% + 6px);
+
+    left: auto;
+    right: 10px;
+
+    width: 205px;
+
+    max-width: calc(100vw - 20px);
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding: 6px;
+
+    background: rgba(255,255,255,0.98);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border: 1px solid var(--line);
+
+    border-radius: 12px;
+
+    box-shadow:
+      0 10px 25px rgba(30,70,90,0.14);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform:
+      translateY(-5px)
+      scale(0.98);
+
+    transform-origin: top right;
+
+    pointer-events: none;
+
+    transition:
+      opacity .15s ease,
+      transform .15s ease,
+      visibility .15s ease;
+  }
+
+
+  nav#mainNav.mobile-open {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    pointer-events: auto;
+  }
+
+
+  /* Small menu items */
+  nav#mainNav a {
+
+    width: 100%;
+
+    min-height: 34px;
+
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding:
+      7px 10px;
+
+    border-radius: 7px;
+
+    font-size: 0.68rem;
+
+    line-height: 1;
+
+    letter-spacing: 0.04em;
+
+    white-space: nowrap;
+  }
+
+  nav#mainNav a:hover,
+  nav#mainNav a.active {
+
+    background:
+      var(--blue-light);
+
+    color:
+      var(--blue-dark);
+  }
+
+
+  /* =======================================================
+     SAVE MORE VERTICAL SPACE BELOW HEADER
+  ======================================================= */
+
+  .container {
+    padding-top: 0;
+  }
+
+  .home-section {
+    padding-top: 22px;
+  }
+
+  .inner-page {
+    padding-top: 20px;
+  }
+
+
+  /* Smaller hero spacing */
+  .hero-copy {
+    padding:
+      22px 18px;
+  }
+
+  .hero-copy h1 {
+    font-size:
+      clamp(1.85rem, 9vw, 2.4rem);
+  }
+
+  .hero-copy p {
+    font-size:
+      0.88rem;
+  }
+
+
+  /* Smaller cards */
+  .info-card,
+  .guide-card,
+  .content-card {
+    padding: 17px;
+
+    border-radius: 14px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+  header,
+  .nav-container {
+    min-height: 44px;
+    height: 44px;
+  }
+
+  .nav-container {
+    padding:
+      4px 9px;
+  }
+
+  .brand {
+    font-size:
+      0.94rem;
+  }
+
+  .mobile-menu-toggle {
+    width: 31px;
+    height: 31px;
+    flex-basis: 31px;
+    border-radius: 7px;
+  }
+
+  .mobile-menu-toggle span {
+    width: 14px;
+  }
+
+  nav#mainNav {
+    right: 8px;
+
+    width: 190px;
+
+    padding: 5px;
+
+    border-radius: 10px;
+  }
+
+  nav#mainNav a {
+    min-height: 31px;
+    height: 31px;
+
+    padding:
+      6px 9px;
+
+    font-size:
+      0.64rem;
+  }
+}
     </div>
   </header>
 
