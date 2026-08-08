@@ -1,0 +1,3228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>OncoRx — Cancer Guide</title>
+
+  <style>
+    /* =========================================================
+       ONCORX — CORE DESIGN
+    ========================================================= */
+
+    :root {
+      --blue: #2f6f95;
+      --blue-dark: #245a79;
+      --blue-light: #eaf4f8;
+      --blue-pale: #f6fbfd;
+
+      --ink: #17384a;
+      --muted: #607986;
+
+      --white: #ffffff;
+      --line: #d7e6ed;
+
+      --green: #5c7a6b;
+      --orange: #b87333;
+
+      --shadow: 0 12px 32px rgba(35, 76, 96, 0.08);
+      --shadow-hover: 0 18px 38px rgba(35, 76, 96, 0.14);
+
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        Inter,
+        "DM Sans",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      color: var(--ink);
+
+      background:
+        linear-gradient(
+          180deg,
+          #eaf4f8 0%,
+          #f8fcfd 48%,
+          #eef6f9 100%
+        );
+
+      line-height: 1.7;
+    }
+
+    body.manager-mode {
+      padding-bottom: 90px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(14px);
+
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 2px 15px rgba(30, 70, 90, 0.05);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+
+      padding: 16px 28px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: Georgia, "Times New Roman", serif;
+
+      font-size: 1.3rem;
+      font-weight: 700;
+
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--blue);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      gap: 24px;
+
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+
+      font-size: 0.78rem;
+      font-weight: 700;
+
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+
+      padding: 5px 0;
+
+      border-bottom: 2px solid transparent;
+
+      transition:
+        color 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--blue-dark);
+      border-bottom-color: var(--blue);
+    }
+
+    /* =========================================================
+       PAGE CONTAINER
+    ========================================================= */
+
+    main {
+      width: 100%;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+
+      padding: 0 28px 80px;
+    }
+
+    .page {
+      display: none;
+
+      animation: pageIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================================================
+       HOME
+    ========================================================= */
+
+    .home-hero {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(270px, 0.55fr);
+
+      gap: 22px;
+
+      padding: 50px 0 24px;
+    }
+
+    .hero-copy {
+      padding: 48px;
+
+      border-radius: 26px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #d9edf5 0%,
+          #edf7fa 58%,
+          #f9fcfd 100%
+        );
+
+      border: 1px solid #cde3eb;
+
+      box-shadow: var(--shadow);
+    }
+
+    .hero-kicker,
+    .section-kicker {
+      color: var(--blue);
+
+      font-size: 0.72rem;
+      font-weight: 800;
+
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .hero-copy h1 {
+      margin: 12px 0 16px;
+
+      max-width: 800px;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-copy p {
+      max-width: 700px;
+
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 1.05rem;
+    }
+
+    .hero-actions {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 12px;
+
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 12px 20px;
+
+      border-radius: 999px;
+
+      border: 1px solid transparent;
+
+      font-size: 0.82rem;
+      font-weight: 800;
+
+      letter-spacing: 0.04em;
+
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: var(--blue);
+
+      box-shadow: 0 8px 20px rgba(47, 111, 149, 0.18);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-secondary {
+      color: var(--blue-dark);
+
+      background: #fff;
+
+      border-color: #c9dfe8;
+    }
+
+    .btn-secondary:hover {
+      background: var(--blue-light);
+    }
+
+    .hero-panel {
+      padding: 30px;
+
+      border-radius: 26px;
+
+      background: var(--blue);
+      color: #fff;
+
+      box-shadow: var(--shadow);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-panel-icon {
+      width: 48px;
+      height: 48px;
+
+      display: grid;
+      place-items: center;
+
+      margin-bottom: 20px;
+
+      border-radius: 14px;
+
+      background: rgba(255, 255, 255, 0.15);
+
+      font-size: 1.5rem;
+    }
+
+    .hero-panel h3 {
+      margin: 0 0 8px;
+
+      font-size: 1.25rem;
+    }
+
+    .hero-panel p {
+      margin: 0;
+
+      color: #e0f0f5;
+    }
+
+    /* =========================================================
+       HOME SECTIONS
+    ========================================================= */
+
+    .home-section {
+      padding: 58px 0 10px;
+    }
+
+    .section-heading {
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2 {
+      margin: 7px 0 0;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(2rem, 3.5vw, 3rem);
+
+      line-height: 1.15;
+    }
+
+    .section-heading p.description {
+      max-width: 760px;
+
+      margin: 12px 0 0;
+
+      color: var(--muted);
+    }
+
+    .card-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .info-card {
+      position: relative;
+
+      min-height: 190px;
+
+      padding: 26px;
+
+      background: rgba(255, 255, 255, 0.96);
+
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+
+      box-shadow: var(--shadow);
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+
+      box-shadow: var(--shadow-hover);
+
+      border-color: #a9cbd9;
+    }
+
+    .info-card .icon {
+      color: var(--blue);
+
+      font-size: 1.7rem;
+
+      margin-bottom: 14px;
+    }
+
+    .info-card h3 {
+      margin: 0 0 9px;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 1.25rem;
+    }
+
+    .info-card p {
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 0.94rem;
+    }
+
+    .clickable {
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       PLATFORM MESSAGE
+       THIS IS THE FINAL HOME SECTION
+    ========================================================= */
+
+    .platform-message {
+      margin-top: 40px;
+
+      padding: 38px;
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #f1f8fb
+        );
+
+      border: 1px solid var(--line);
+
+      box-shadow: var(--shadow);
+    }
+
+    .message-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+
+      margin-top: 24px;
+    }
+
+    .message-item {
+      padding: 22px;
+
+      background: #fff;
+
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .message-item h3 {
+      margin: 0 0 8px;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    }
+
+    .message-item p {
+      margin: 0;
+
+      color: var(--muted);
+    }
+
+    /* =========================================================
+       INNER PAGES
+    ========================================================= */
+
+    .inner-page {
+      padding: 48px 0;
+    }
+
+    .page-header {
+      padding: 40px;
+
+      margin-bottom: 24px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #dceef5,
+          #f7fbfd
+        );
+
+      border: 1px solid #cfe3eb;
+
+      border-radius: 24px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .page-header h1 {
+      margin: 8px 0 10px;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: clamp(2.3rem, 4vw, 3.7rem);
+
+      line-height: 1.1;
+    }
+
+    .page-header p {
+      max-width: 760px;
+
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size: 1rem;
+    }
+
+    .back-button {
+      display: inline-flex;
+
+      align-items: center;
+
+      margin-bottom: 22px;
+
+      padding: 10px 16px;
+
+      color: var(--blue-dark);
+
+      background: #fff;
+
+      border: 1px solid var(--line);
+
+      border-radius: 999px;
+
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .back-button:hover {
+      background: var(--blue-light);
+    }
+
+    .content-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 20px;
+    }
+
+    .content-card {
+      padding: 30px;
+
+      background: rgba(255, 255, 255, 0.96);
+
+      border: 1px solid var(--line);
+
+      border-radius: 20px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .content-card h2,
+    .content-card h3 {
+      margin-top: 0;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    }
+
+    .content-card p {
+      color: var(--muted);
+    }
+
+    .content-card ul {
+      padding-left: 20px;
+
+      color: var(--muted);
+    }
+
+    .content-card li {
+      margin-bottom: 8px;
+    }
+
+    /* =========================================================
+       CANCER & TREATMENT GUIDE
+    ========================================================= */
+
+    .guide-intro {
+      padding: 34px;
+
+      margin-bottom: 22px;
+
+      background: #fff;
+
+      border: 1px solid var(--line);
+
+      border-radius: 22px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .guide-intro p {
+      max-width: 850px;
+
+      margin-bottom: 0;
+
+      color: var(--muted);
+    }
+
+    .guide-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .guide-card {
+      padding: 25px;
+
+      background: #fff;
+
+      border: 1px solid var(--line);
+
+      border-radius: 18px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .guide-card h3 {
+      margin-top: 0;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    }
+
+    .guide-card p {
+      color: var(--muted);
+
+      font-size: 0.93rem;
+    }
+
+    /* =========================================================
+       CONTACT
+    ========================================================= */
+
+    .contact-layout {
+      display: grid;
+
+      grid-template-columns:
+        0.8fr 1.2fr;
+
+      gap: 24px;
+
+      align-items: stretch;
+    }
+
+    .contact-info {
+      padding: 34px;
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          145deg,
+          #245a79,
+          #2f6f95
+        );
+
+      color: #fff;
+
+      box-shadow: var(--shadow);
+    }
+
+    .contact-info h2 {
+      margin-top: 0;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-size: 2rem;
+    }
+
+    .contact-info > p {
+      color: #e4f1f5;
+    }
+
+    .contact-item {
+      display: flex;
+
+      align-items: flex-start;
+
+      gap: 14px;
+
+      margin-top: 24px;
+
+      padding: 16px;
+
+      border-radius: 14px;
+
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+
+      flex: 0 0 40px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.13);
+
+      font-size: 1.15rem;
+    }
+
+    .contact-item strong {
+      display: block;
+
+      margin-bottom: 2px;
+    }
+
+    .contact-item span,
+    .contact-item a {
+      color: #dceef5;
+
+      word-break: break-word;
+    }
+
+    .contact-form-card {
+      padding: 34px;
+
+      background: rgba(255, 255, 255, 0.98);
+
+      border: 1px solid var(--line);
+
+      border-radius: 24px;
+
+      box-shadow: var(--shadow);
+    }
+
+    .contact-form-card h2 {
+      margin-top: 0;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    }
+
+    .contact-form-card > p {
+      color: var(--muted);
+    }
+
+    .form-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      gap: 16px;
+
+      margin-top: 24px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+
+      gap: 6px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: var(--ink);
+
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+
+      padding: 13px 15px;
+
+      border: 1px solid #cbdfe7;
+
+      border-radius: 12px;
+
+      background: #f9fcfd;
+
+      color: var(--ink);
+
+      outline: none;
+
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .field textarea {
+      min-height: 150px;
+
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--blue);
+
+      box-shadow:
+        0 0 0 3px rgba(47, 111, 149, 0.1);
+    }
+
+    .form-submit {
+      margin-top: 4px;
+    }
+
+    .form-note {
+      margin-top: 12px;
+
+      color: var(--muted);
+
+      font-size: 0.78rem;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+      max-width: 1200px;
+
+      margin: 0 auto;
+
+      padding: 34px 28px 50px;
+
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+
+      align-items: flex-start;
+      justify-content: space-between;
+
+      gap: 30px;
+
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+      font-weight: 700;
+
+      font-size: 1.2rem;
+    }
+
+    footer p {
+      max-width: 560px;
+
+      color: var(--muted);
+
+      margin-bottom: 0;
+    }
+
+    /* =========================================================
+       MANAGE CONTENT
+    ========================================================= */
+
+    .manage-button {
+      position: fixed;
+
+      right: 20px;
+      bottom: 20px;
+
+      z-index: 5000;
+
+      padding: 11px 16px;
+
+      border: 1px solid #c7dce5;
+
+      border-radius: 12px;
+
+      background: #fff;
+
+      color: var(--blue-dark);
+
+      font-size: 0.8rem;
+      font-weight: 800;
+
+      box-shadow: 0 10px 25px rgba(20, 60, 80, 0.15);
+
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .manage-button:hover {
+      background: var(--blue-light);
+
+      transform: translateY(-2px);
+    }
+
+    .manager-panel {
+      position: fixed;
+
+      right: 20px;
+      bottom: 78px;
+
+      z-index: 4999;
+
+      width: min(360px, calc(100vw - 40px));
+
+      padding: 20px;
+
+      background: #fff;
+
+      border: 1px solid var(--line);
+
+      border-radius: 18px;
+
+      box-shadow: 0 18px 45px rgba(20, 60, 80, 0.18);
+
+      display: none;
+    }
+
+    .manager-panel.active {
+      display: block;
+    }
+
+    .manager-panel h3 {
+      margin: 0 0 6px;
+
+      font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+    }
+
+    .manager-panel p {
+      margin: 0 0 15px;
+
+      color: var(--muted);
+
+      font-size: 0.85rem;
+    }
+
+    .manager-panel input {
+      width: 100%;
+
+      padding: 12px 13px;
+
+      border: 1px solid var(--line);
+
+      border-radius: 10px;
+
+      outline: none;
+    }
+
+    .manager-actions {
+      display: flex;
+
+      gap: 8px;
+
+      margin-top: 12px;
+    }
+
+    .manager-actions button {
+      flex: 1;
+
+      padding: 10px 12px;
+
+      border: 0;
+
+      border-radius: 10px;
+
+      font-weight: 700;
+    }
+
+    .manager-login {
+      color: #fff;
+
+      background: var(--blue);
+    }
+
+    .manager-cancel {
+      color: var(--blue-dark);
+
+      background: var(--blue-light);
+    }
+
+    .manager-toolbar {
+      position: fixed;
+
+      left: 50%;
+
+      bottom: 20px;
+
+      z-index: 4500;
+
+      transform: translateX(-50%);
+
+      display: none;
+
+      align-items: center;
+
+      gap: 8px;
+
+      padding: 9px 12px;
+
+      background: #17384a;
+
+      border-radius: 14px;
+
+      box-shadow: 0 14px 35px rgba(20, 60, 80, 0.22);
+    }
+
+    body.manager-mode .manager-toolbar {
+      display: flex;
+    }
+
+    body.manager-mode .manage-button {
+      display: none;
+    }
+
+    .manager-toolbar button {
+      padding: 9px 13px;
+
+      border: 0;
+
+      border-radius: 9px;
+
+      font-size: 0.78rem;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    .save-content {
+      color: #fff;
+
+      background: var(--blue);
+    }
+
+    .exit-manager {
+      color: #17384a;
+
+      background: #fff;
+    }
+
+    [data-editable].editing {
+      outline: 2px dashed #5c9bbb;
+
+      outline-offset: 5px;
+
+      background: rgba(234, 244, 248, 0.55);
+    }
+
+    body.manager-mode [data-editable] {
+      cursor: text;
+    }
+
+    .manager-hint {
+      position: fixed;
+
+      left: 50%;
+
+      top: 78px;
+
+      z-index: 4000;
+
+      transform: translateX(-50%);
+
+      display: none;
+
+      padding: 8px 14px;
+
+      border-radius: 999px;
+
+      background: #17384a;
+
+      color: #fff;
+
+      font-size: 0.76rem;
+
+      box-shadow: 0 8px 20px rgba(20, 60, 80, 0.15);
+    }
+
+    body.manager-mode .manager-hint {
+      display: block;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 1000px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .card-grid,
+      .guide-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .contact-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-container {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        width: 100%;
+
+        justify-content: flex-start;
+
+        gap: 13px 18px;
+      }
+
+      nav a {
+        font-size: 0.7rem;
+      }
+
+      .container {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero-copy {
+        padding: 30px 25px;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.6rem;
+      }
+
+      .page-header {
+        padding: 30px 25px;
+      }
+
+      .content-grid,
+      .message-grid,
+      .form-grid,
+      .card-grid,
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .platform-message {
+        padding: 25px;
+      }
+
+      .contact-info,
+      .contact-form-card {
+        padding: 25px;
+      }
+
+      .manager-toolbar {
+        left: 12px;
+        right: 12px;
+
+        width: auto;
+
+        transform: none;
+
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .manage-button {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .manager-panel {
+        right: 12px;
+        bottom: 68px;
+
+        width: calc(100vw - 24px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================================================
+       HEADER / NAVIGATION
+  ======================================================== -->
+
+  <header>
+    <div class="nav-container">
+
+      <a href="#home" class="brand" onclick="showPage('home'); return false;">
+        Onco<span>Rx</span>
+      </a>
+
+      <nav id="mainNav">
+
+        <a href="#home"
+           data-page="home"
+           onclick="showPage('home'); return false;">
+          Home
+        </a>
+
+        <a href="#about"
+           data-page="about"
+           onclick="showPage('about'); return false;">
+          About
+        </a>
+
+        <a href="#medicines"
+           data-page="medicines"
+           onclick="showPage('medicines'); return false;">
+          Medicines
+        </a>
+
+        <a href="#guide"
+           data-page="guide"
+           onclick="showPage('guide'); return false;">
+          Cancer & Treatment Guide
+        </a>
+
+        <a href="#insights"
+           data-page="insights"
+           onclick="showPage('insights'); return false;">
+          Insights
+        </a>
+
+        <a href="#contact"
+           data-page="contact"
+           onclick="showPage('contact'); return false;">
+          Get in Touch
+        </a>
+
+      </nav>
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <!-- =====================================================
+         HOME PAGE
+         IMPORTANT: HOME ENDS AT PLATFORM MESSAGE
+    ====================================================== -->
+
+    <section id="home" class="page active">
+
+      <div class="home-hero">
+
+        <div class="hero-copy">
+
+          <div class="hero-kicker" data-editable>
+            Oncology stories & insights
+          </div>
+
+          <h1 data-editable>
+            The people, practice and science shaping modern oncology care.
+          </h1>
+
+          <p data-editable>
+            OncoRx — Cancer Guide brings clear, evidence-minded oncology
+            information together for healthcare professionals, patients,
+            families and everyone seeking a better understanding of cancer care.
+          </p>
+
+          <div class="hero-actions">
+
+            <button
+              class="btn btn-primary"
+              onclick="showPage('guide')">
+              Explore Cancer Guide
+            </button>
+
+            <button
+              class="btn btn-secondary"
+              onclick="showPage('medicines')">
+              Explore Medicines
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-panel">
+
+          <div class="hero-panel-icon">
+            +
+          </div>
+
+          <h3 data-editable>
+            Your oncology information hub
+          </h3>
+
+          <p data-editable>
+            Explore cancer information, treatments, medicines,
+            clinical insights and practical resources through dedicated
+            sections designed for easy navigation.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- HOME: ABOUT -->
+
+      <section class="home-section">
+
+        <div class="section-heading">
+
+          <div class="section-kicker">
+            About OncoRx
+          </div>
+
+          <h2 data-editable>
+            A focused platform for clearer oncology information.
+          </h2>
+
+          <p class="description" data-editable>
+            OncoRx connects oncology knowledge, medicines information,
+            treatment guidance and practical resources in one accessible
+            platform.
+          </p>
+
+        </div>
+
+        <div class="card-grid">
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('about')">
+
+            <div class="icon">◉</div>
+
+            <h3 data-editable>
+              Purpose-built oncology platform
+            </h3>
+
+            <p data-editable>
+              A central place for oncology education, practical information
+              and healthcare-focused content.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('professionals')">
+
+            <div class="icon">✚</div>
+
+            <h3 data-editable>
+              For healthcare professionals
+            </h3>
+
+            <p data-editable>
+              Clinical and practice-oriented resources supporting oncology
+              teams and multidisciplinary care.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('resources')">
+
+            <div class="icon">▣</div>
+
+            <h3 data-editable>
+              Practical resources
+            </h3>
+
+            <p data-editable>
+              Helpful information for patients, families, caregivers and
+              people navigating the cancer journey.
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- HOME: MEDICINES -->
+
+      <section class="home-section">
+
+        <div class="section-heading">
+
+          <div class="section-kicker">
+            Medicines
+          </div>
+
+          <h2 data-editable>
+            Oncology medicines, organized for easier exploration.
+          </h2>
+
+          <p class="description" data-editable>
+            Explore medicine categories and understand how medicines fit
+            into modern cancer care.
+          </p>
+
+        </div>
+
+        <div class="card-grid">
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('medicines')">
+
+            <div class="icon">◆</div>
+
+            <h3 data-editable>
+              Targeted therapies
+            </h3>
+
+            <p data-editable>
+              Information about medicines designed around specific molecular
+              targets and pathways.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('medicines')">
+
+            <div class="icon">◈</div>
+
+            <h3 data-editable>
+              Immunotherapy
+            </h3>
+
+            <p data-editable>
+              Explore immune-based approaches and their role in modern
+              oncology treatment.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('medicines')">
+
+            <div class="icon">◇</div>
+
+            <h3 data-editable>
+              Supportive care
+            </h3>
+
+            <p data-editable>
+              Learn about therapies that help manage symptoms and support
+              patients throughout treatment.
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- HOME: INSIGHTS -->
+
+      <section class="home-section">
+
+        <div class="section-heading">
+
+          <div class="section-kicker">
+            Clinical Insights
+          </div>
+
+          <h2 data-editable>
+            Meaningful oncology information for a changing field.
+          </h2>
+
+        </div>
+
+        <div class="card-grid">
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('insights')">
+
+            <div class="icon">◌</div>
+
+            <h3 data-editable>
+              Evidence-informed updates
+            </h3>
+
+            <p data-editable>
+              Follow developments in oncology research, medicines and
+              clinical practice.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('insights')">
+
+            <div class="icon">↗</div>
+
+            <h3 data-editable>
+              Innovation
+            </h3>
+
+            <p data-editable>
+              Explore emerging therapies and approaches shaping the future
+              of cancer care.
+            </p>
+
+          </article>
+
+
+          <article
+            class="info-card clickable"
+            onclick="showPage('insights')">
+
+            <div class="icon">◎</div>
+
+            <h3 data-editable>
+              Patient-centered care
+            </h3>
+
+            <p data-editable>
+              Keep the patient experience, quality of life and care
+              coordination at the center.
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           FINAL HOME SECTION: PLATFORM MESSAGE
+
+           NOTHING FOLLOWS THIS ON HOME.
+      ==================================================== -->
+
+      <section class="home-section">
+
+        <div class="platform-message">
+
+          <div class="section-heading">
+
+            <div class="section-kicker">
+              Platform Message
+            </div>
+
+            <h2 data-editable>
+              What OncoRx shares with the oncology community.
+            </h2>
+
+            <p class="description" data-editable>
+              Our goal is to make oncology information easier to explore,
+              understand and navigate.
+            </p>
+
+          </div>
+
+          <div class="message-grid">
+
+            <article class="message-item">
+
+              <h3 data-editable>
+                Drug education
+              </h3>
+
+              <p data-editable>
+                Clear information about oncology medicines, treatment
+                considerations, safety and supportive care.
+              </p>
+
+            </article>
+
+
+            <article class="message-item">
+
+              <h3 data-editable>
+                Practice support
+              </h3>
+
+              <p data-editable>
+                Resources designed to strengthen communication,
+                care coordination and oncology practice.
+              </p>
+
+            </article>
+
+
+            <article class="message-item">
+
+              <h3 data-editable>
+                Innovation awareness
+              </h3>
+
+              <p data-editable>
+                A dedicated space for developments in cancer research,
+                medicines and treatment approaches.
+              </p>
+
+            </article>
+
+
+            <article class="message-item">
+
+              <h3 data-editable>
+                Patient-centered focus
+              </h3>
+
+              <p data-editable>
+                Information framed around outcomes, quality of life,
+                understanding and practical support.
+              </p>
+
+            </article>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <!-- =====================================================
+         CANCER & TREATMENT GUIDE
+         DEDICATED PAGE
+    ====================================================== -->
+
+    <section id="guide" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            OncoRx Cancer Guide
+          </div>
+
+          <h1 data-editable>
+            Cancer & Treatment Guide
+          </h1>
+
+          <p data-editable>
+            Clear, practical information to help people understand cancer,
+            treatment approaches and the journey through care.
+          </p>
+
+        </div>
+
+
+        <div class="guide-intro">
+
+          <h2 data-editable>
+            Understanding cancer and treatment
+          </h2>
+
+          <p data-editable>
+            Cancer care can involve diagnosis, staging, surgery, medicines,
+            radiation therapy, supportive care and follow-up. This section
+            organizes information into focused topics so visitors can explore
+            what is relevant to them without overwhelming the home page.
+          </p>
+
+        </div>
+
+
+        <div class="guide-grid">
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Understanding Cancer
+            </h3>
+
+            <p data-editable>
+              Learn what cancer is, how cancers develop, how they are
+              diagnosed and why cancers can behave differently.
+            </p>
+
+          </article>
+
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Cancer Types
+            </h3>
+
+            <p data-editable>
+              Explore information about different cancer types and the
+              organs or tissues in which they develop.
+            </p>
+
+          </article>
+
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Diagnosis & Staging
+            </h3>
+
+            <p data-editable>
+              Understand common diagnostic tests, pathology, imaging and
+              the purpose of cancer staging.
+            </p>
+
+          </article>
+
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Cancer Treatment
+            </h3>
+
+            <p data-editable>
+              Learn about surgery, radiation therapy, systemic treatments,
+              immunotherapy, targeted therapy and supportive care.
+            </p>
+
+          </article>
+
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Treatment Decisions
+            </h3>
+
+            <p data-editable>
+              Explore how cancer type, stage, biomarkers, patient factors
+              and treatment goals can influence care decisions.
+            </p>
+
+          </article>
+
+
+          <article class="guide-card">
+
+            <h3 data-editable>
+              Living Through Treatment
+            </h3>
+
+            <p data-editable>
+              Practical information about side effects, supportive care,
+              communication and maintaining quality of life.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CANCER TYPES
+    ====================================================== -->
+
+    <section id="types" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Cancer Types
+          </div>
+
+          <h1 data-editable>
+            Explore Cancer Types
+          </h1>
+
+          <p data-editable>
+            A dedicated section for information about different cancers,
+            their characteristics and common treatment pathways.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Solid Tumors
+            </h2>
+
+            <p data-editable>
+              Information can be organized by organ or tissue, including
+              breast, lung, colorectal, prostate and other cancers.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Blood Cancers
+            </h2>
+
+            <p data-editable>
+              Dedicated information can cover leukemia, lymphoma,
+              myeloma and related hematologic malignancies.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         TREATMENTS
+    ====================================================== -->
+
+    <section id="treatments" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Cancer Treatment
+          </div>
+
+          <h1 data-editable>
+            Cancer Treatment & Care
+          </h1>
+
+          <p data-editable>
+            Explore common cancer treatment approaches and the role each
+            can play in a patient's overall care plan.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Surgery
+            </h2>
+
+            <p data-editable>
+              Surgical treatment may be used to remove tumors, obtain tissue
+              for diagnosis or manage complications.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Radiation Therapy
+            </h2>
+
+            <p data-editable>
+              Radiation uses carefully planned energy to treat cancer cells
+              and may be used alone or alongside other treatments.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Systemic Therapy
+            </h2>
+
+            <p data-editable>
+              Systemic treatments include chemotherapy, targeted medicines,
+              immunotherapy and other medicines that act throughout the body.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Supportive Care
+            </h2>
+
+            <p data-editable>
+              Supportive care helps manage symptoms, treatment side effects,
+              nutrition, emotional wellbeing and quality of life.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MEDICINES
+    ====================================================== -->
+
+    <section id="medicines" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Cancer Medicines
+          </div>
+
+          <h1 data-editable>
+            Cancer Medicines
+          </h1>
+
+          <p data-editable>
+            Explore medicine categories and practical oncology information
+            in a dedicated, focused section.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Targeted Oncology Agents
+            </h2>
+
+            <p data-editable>
+              Medicines designed to act on specific molecular targets or
+              pathways involved in cancer growth.
+            </p>
+
+            <ul>
+              <li data-editable>Kinase inhibitors</li>
+              <li data-editable>PARP inhibitors</li>
+              <li data-editable>Hormone-directed medicines</li>
+            </ul>
+
+          </article>
+
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Immunotherapy & Biologics
+            </h2>
+
+            <p data-editable>
+              Explore immune checkpoint inhibitors, monoclonal antibodies,
+              antibody-drug conjugates and other biological approaches.
+            </p>
+
+          </article>
+
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Chemotherapy
+            </h2>
+
+            <p data-editable>
+              A dedicated space for information about traditional
+              cytotoxic cancer medicines and their clinical use.
+            </p>
+
+          </article>
+
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Supportive Medicines
+            </h2>
+
+            <p data-editable>
+              Medicines that help prevent or manage treatment-related
+              symptoms and complications.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RESOURCES
+    ====================================================== -->
+
+    <section id="resources" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Patient Resources
+          </div>
+
+          <h1 data-editable>
+            Patient & Family Resources
+          </h1>
+
+          <p data-editable>
+            Practical resources for patients, families and caregivers
+            navigating cancer care.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Preparing for Appointments
+            </h2>
+
+            <p data-editable>
+              Helpful questions, documents and information patients may
+              want to prepare before speaking with their healthcare team.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Treatment Questions
+            </h2>
+
+            <p data-editable>
+              A structured place for common questions about treatment,
+              medicines, side effects and follow-up.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Caregiver Support
+            </h2>
+
+            <p data-editable>
+              Resources focused on communication, practical support and
+              helping loved ones navigate treatment.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Reliable Information
+            </h2>
+
+            <p data-editable>
+              Use this area to add trusted organizations, educational
+              documents, downloadable resources and useful links.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROFESSIONALS
+    ====================================================== -->
+
+    <section id="professionals" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Healthcare Professionals
+          </div>
+
+          <h1 data-editable>
+            For Health Professionals
+          </h1>
+
+          <p data-editable>
+            Clinical and practice-focused oncology resources for healthcare
+            professionals and multidisciplinary teams.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Clinical Resources
+            </h2>
+
+            <p data-editable>
+              Add treatment protocols, clinical references, dosing resources,
+              safety information and professional education.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Oncology Pharmacy
+            </h2>
+
+            <p data-editable>
+              Dedicated resources for oncology pharmacists, medication
+              safety, interactions and supportive care.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Multidisciplinary Practice
+            </h2>
+
+            <p data-editable>
+              Resources supporting collaboration between physicians,
+              pharmacists, nurses and other oncology professionals.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Professional Updates
+            </h2>
+
+            <p data-editable>
+              Add regulatory updates, clinical trial developments,
+              approvals and new treatment information.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INSIGHTS
+    ====================================================== -->
+
+    <section id="insights" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Clinical Insights
+          </div>
+
+          <h1 data-editable>
+            Cancer & Treatment Insights
+          </h1>
+
+          <p data-editable>
+            Evidence-informed oncology knowledge, updates and developments.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Research & Innovation
+            </h2>
+
+            <p data-editable>
+              Add articles covering emerging therapies, clinical trials,
+              research findings and oncology innovation.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Treatment Updates
+            </h2>
+
+            <p data-editable>
+              Use this space for changes in treatment approaches,
+              guidelines and clinical practice.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Medicine Updates
+            </h2>
+
+            <p data-editable>
+              Add information about new oncology medicines, approvals,
+              safety developments and clinical use.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Local & Global Context
+            </h2>
+
+            <p data-editable>
+              Highlight oncology developments relevant to local healthcare
+              systems alongside international developments.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ABOUT
+    ====================================================== -->
+
+    <section id="about" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            About OncoRx
+          </div>
+
+          <h1 data-editable>
+            About OncoRx — Cancer Guide
+          </h1>
+
+          <p data-editable>
+            A focused platform designed to make cancer information,
+            treatment guidance and oncology medicines easier to navigate.
+          </p>
+
+        </div>
+
+        <div class="content-grid">
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Our Purpose
+            </h2>
+
+            <p data-editable>
+              OncoRx is designed to bring oncology information into a
+              structured environment where users can move directly to
+              the topic they need.
+            </p>
+
+          </article>
+
+          <article class="content-card">
+
+            <h2 data-editable>
+              Our Approach
+            </h2>
+
+            <p data-editable>
+              Information is organized into focused sections rather than
+              placing every resource on the home page.
+            </p>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTACT
+    ====================================================== -->
+
+    <section id="contact" class="page">
+
+      <div class="inner-page">
+
+        <button
+          class="back-button"
+          onclick="showPage('home')">
+          ← Back to Home
+        </button>
+
+        <div class="page-header">
+
+          <div class="section-kicker">
+            Get in Touch
+          </div>
+
+          <h1 data-editable>
+            Connect with OncoRx
+          </h1>
+
+          <p data-editable>
+            Have a question, suggestion, partnership idea or content request?
+            Send us a message and we'll receive it at our official email.
+          </p>
+
+        </div>
+
+
+        <div class="contact-layout">
+
+          <!-- CONTACT INFORMATION -->
+
+          <div class="contact-info">
+
+            <h2 data-editable>
+              We'd love to hear from you.
+            </h2>
+
+            <p data-editable>
+              Whether you're a healthcare professional, organization,
+              patient advocate or simply interested in oncology information,
+              you can reach the OncoRx team directly.
+            </p>
+
+
+            <div class="contact-item">
+
+              <div class="contact-icon">
+                ✉
+              </div>
+
+              <div>
+
+                <strong>
+                  Email
+                </strong>
+
+                <a href="mailto:ayamabuga@gmail.com">
+                  ayamabuga@gmail.com
+                </a>
+
+              </div>
+
+            </div>
+
+
+            <div class="contact-item">
+
+              <div class="contact-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <strong data-editable>
+                  General enquiries
+                </strong>
+
+                <span data-editable>
+                  Questions about the platform, content or collaboration.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="contact-item">
+
+              <div class="contact-icon">
+                +
+              </div>
+
+              <div>
+
+                <strong data-editable>
+                  Content requests
+                </strong>
+
+                <span data-editable>
+                  Suggest topics, resources or oncology information
+                  you'd like to see.
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTACT FORM -->
+
+          <div class="contact-form-card">
+
+            <h2 data-editable>
+              Send a request
+            </h2>
+
+            <p data-editable>
+              Complete the form below. Selecting "Send request" will open
+              your email application with the message addressed to
+              ayamabuga@gmail.com.
+            </p>
+
+
+            <form
+              id="contactForm"
+              onsubmit="sendContactForm(event)">
+
+              <div class="form-grid">
+
+                <div class="field">
+
+                  <label for="contactName">
+                    Name
+                  </label>
+
+                  <input
+                    id="contactName"
+                    type="text"
+                    placeholder="Your name"
+                    required />
+
+                </div>
+
+
+                <div class="field">
+
+                  <label for="contactEmail">
+                    Email
+                  </label>
+
+                  <input
+                    id="contactEmail"
+                    type="email"
+                    placeholder="you@example.com"
+                    required />
+
+                </div>
+
+
+                <div class="field">
+
+                  <label for="contactOrganization">
+                    Organization
+                  </label>
+
+                  <input
+                    id="contactOrganization"
+                    type="text"
+                    placeholder="Organization or institution" />
+
+                </div>
+
+
+                <div class="field">
+
+                  <label for="contactFocus">
+                    Focus area
+                  </label>
+
+                  <select id="contactFocus">
+
+                    <option value="General enquiry">
+                      General enquiry
+                    </option>
+
+                    <option value="Cancer information">
+                      Cancer information
+                    </option>
+
+                    <option value="Medicines">
+                      Medicines
+                    </option>
+
+                    <option value="Professional resources">
+                      Professional resources
+                    </option>
+
+                    <option value="Partnership">
+                      Partnership
+                    </option>
+
+                    <option value="Content request">
+                      Content request
+                    </option>
+
+                  </select>
+
+                </div>
+
+
+                <div class="field full">
+
+                  <label for="contactMessage">
+                    Message
+                  </label>
+
+                  <textarea
+                    id="contactMessage"
+                    placeholder="Tell us how we can help..."
+                    required></textarea>
+
+                </div>
+
+
+                <div class="field full">
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary form-submit">
+
+                    Send request →
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </form>
+
+
+            <div class="form-note">
+              Email destination:
+              <strong>ayamabuga@gmail.com</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================
+       FOOTER
+  ======================================================== -->
+
+  <footer>
+
+    <div class="footer-inner">
+
+      <div>
+
+        <div class="footer-brand">
+          OncoRx — Cancer Guide
+        </div>
+
+        <p data-editable>
+          Oncology information, cancer treatment guidance, medicines
+          education and practical resources in one focused platform.
+        </p>
+
+      </div>
+
+      <div>
+
+        <a
+          href="mailto:ayamabuga@gmail.com"
+          class="btn btn-secondary">
+
+          Contact OncoRx
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =======================================================
+       MANAGE CONTENT BUTTON
+  ======================================================== -->
+
+  <button
+    id="manageButton"
+    class="manage-button"
+    onclick="openManager()">
+
+    ⚙ Manage Content
+
+  </button>
+
+
+  <!-- PASSWORD PANEL -->
+
+  <div
+    id="managerPanel"
+    class="manager-panel">
+
+    <h3>
+      Manage Content
+    </h3>
+
+    <p>
+      Enter the administrator password to enable content editing.
+    </p>
+
+    <input
+      id="managerPassword"
+      type="password"
+      placeholder="Enter password"
+      autocomplete="off"
+      onkeydown="if(event.key === 'Enter') verifyManager()" />
+
+    <div class="manager-actions">
+
+      <button
+        class="manager-login"
+        onclick="verifyManager()">
+
+        Unlock
+
+      </button>
+
+      <button
+        class="manager-cancel"
+        onclick="closeManager()">
+
+        Cancel
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MANAGER TOOLBAR -->
+
+  <div class="manager-toolbar">
+
+    <button
+      class="save-content"
+      onclick="saveContent()">
+
+      Save Changes
+
+    </button>
+
+    <button
+      class="exit-manager"
+      onclick="exitManager()">
+
+      Exit Manager
+
+    </button>
+
+  </div>
+
+
+  <div class="manager-hint">
+    Content manager enabled — click any highlighted text to edit it.
+  </div>
+
+
+  <script>
+    /* =========================================================
+       ONCORX PAGE SYSTEM
+    ========================================================= */
+
+    const pages = [
+      "home",
+      "guide",
+      "types",
+      "treatments",
+      "medicines",
+      "resources",
+      "professionals",
+      "insights",
+      "about",
+      "contact"
+    ];
+
+
+    function showPage(pageId) {
+
+      if (!pages.includes(pageId)) {
+        pageId = "home";
+      }
+
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+      });
+
+      const target = document.getElementById(pageId);
+
+      if (target) {
+        target.classList.add("active");
+      }
+
+      document.querySelectorAll("#mainNav a").forEach(link => {
+        link.classList.remove("active");
+      });
+
+      const activeLink = document.querySelector(
+        '#mainNav a[data-page="' + pageId + '"]'
+      );
+
+      if (activeLink) {
+        activeLink.classList.add("active");
+      }
+
+      history.replaceState(
+        null,
+        "",
+        "#" + pageId
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+
+    function loadInitialPage() {
+
+      let pageId =
+        window.location.hash
+          .replace("#", "")
+          .trim();
+
+      if (!pages.includes(pageId)) {
+        pageId = "home";
+      }
+
+      showPage(pageId);
+    }
+
+
+    window.addEventListener(
+      "popstate",
+      loadInitialPage
+    );
+
+
+    window.addEventListener(
+      "hashchange",
+      loadInitialPage
+    );
+
+
+    /* =========================================================
+       CONTACT FORM
+       Sends through the visitor's email client.
+    ========================================================= */
+
+    function sendContactForm(event) {
+
+      event.preventDefault();
+
+      const name =
+        document.getElementById("contactName").value.trim();
+
+      const email =
+        document.getElementById("contactEmail").value.trim();
+
+      const organization =
+        document.getElementById("contactOrganization").value.trim();
+
+      const focus =
+        document.getElementById("contactFocus").value;
+
+      const message =
+        document.getElementById("contactMessage").value.trim();
+
+
+      const subject =
+        encodeURIComponent(
+          "OncoRx Contact Request — " + focus
+        );
+
+
+      const body =
+        encodeURIComponent(
+`Hello OncoRx Team,
+
+Name: ${name}
+Email: ${email}
+Organization: ${organization || "Not provided"}
+Focus area: ${focus}
+
+Message:
+${message}
+
+Sent through the OncoRx website.`
+        );
+
+
+      const mailto =
+        "mailto:ayamabuga@gmail.com" +
+        "?subject=" +
+        subject +
+        "&body=" +
+        body;
+
+
+      window.location.href = mailto;
+    }
+
+
+    /* =========================================================
+       CONTENT MANAGER
+    ========================================================= */
+
+    const MANAGER_PASSWORD = "Pharma!";
+
+    let managerUnlocked = false;
+
+
+    function openManager() {
+
+      if (managerUnlocked) {
+        enterManagerMode();
+        return;
+      }
+
+      const panel =
+        document.getElementById("managerPanel");
+
+      panel.classList.add("active");
+
+      setTimeout(() => {
+        document
+          .getElementById("managerPassword")
+          .focus();
+      }, 100);
+    }
+
+
+    function closeManager() {
+
+      document
+        .getElementById("managerPanel")
+        .classList.remove("active");
+
+      document
+        .getElementById("managerPassword")
+        .value = "";
+    }
+
+
+    function verifyManager() {
+
+      const entered =
+        document
+          .getElementById("managerPassword")
+          .value;
+
+
+      if (entered === MANAGER_PASSWORD) {
+
+        managerUnlocked = true;
+
+        closeManager();
+
+        enterManagerMode();
+
+      } else {
+
+        alert(
+          "Incorrect password. Please try again."
+        );
+
+        document
+          .getElementById("managerPassword")
+          .select();
+      }
+    }
+
+
+    function enterManagerMode() {
+
+      document.body.classList.add(
+        "manager-mode"
+      );
+
+      document
+        .querySelectorAll("[data-editable]")
+        .forEach(element => {
+
+          element.contentEditable = "true";
+
+          element.classList.add("editing");
+        });
+
+      alert(
+        "Content management enabled. You can now edit the highlighted text across the platform."
+      );
+    }
+
+
+    function exitManager() {
+
+      document.body.classList.remove(
+        "manager-mode"
+      );
+
+      document
+        .querySelectorAll("[data-editable]")
+        .forEach(element => {
+
+          element.contentEditable = "false";
+
+          element.classList.remove("editing");
+        });
+
+      managerUnlocked = false;
+    }
+
+
+    /* =========================================================
+       SAVE CONTENT
+       Stores edited content in browser localStorage.
+    ========================================================= */
+
+    function saveContent() {
+
+      if (!managerUnlocked) {
+        return;
+      }
+
+
+      const content = {};
+
+      document
+        .querySelectorAll("[data-editable]")
+        .forEach((element, index) => {
+
+          content[index] =
+            element.innerHTML;
+        });
+
+
+      localStorage.setItem(
+        "oncorx_content_v2",
+        JSON.stringify(content)
+      );
+
+
+      alert(
+        "Your changes have been saved in this browser."
+      );
+    }
+
+
+    function loadSavedContent() {
+
+      try {
+
+        const saved =
+          JSON.parse(
+            localStorage.getItem(
+              "oncorx_content_v2"
+            ) || "{}"
+          );
+
+
+        document
+          .querySelectorAll("[data-editable]")
+          .forEach((element, index) => {
+
+            if (
+              Object.prototype.hasOwnProperty.call(
+                saved,
+                index
+              )
+            ) {
+
+              element.innerHTML =
+                saved[index];
+
+            }
+
+          });
+
+      } catch (error) {
+
+        console.warn(
+          "Unable to load saved OncoRx content.",
+          error
+        );
+
+      }
+    }
+
+
+    /* =========================================================
+       START APPLICATION
+    ========================================================= */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        loadSavedContent();
+
+        loadInitialPage();
+
+      }
+    );
+  </script>
+
+</body>
+</html>
