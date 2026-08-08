@@ -1304,45 +1304,56 @@
         Onco<span>Rx</span>
       </a>
 
-      <nav id="mainNav">
+     <button
+  class="mobile-menu-toggle"
+  id="mobileMenuToggle"
+  type="button"
+  aria-label="Open navigation"
+  aria-expanded="false"
+  aria-controls="mainNav"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
 
-        <a href="#home"
-           data-page="home"
-           onclick="showPage('home'); return false;">
-          Home
-        </a>
+<nav id="mainNav">
+  <a href="#home"
+     data-page="home"
+     onclick="showPage('home'); closeMobileMenu(); return false;">
+    Home
+  </a>
 
-        <a href="#about"
-           data-page="about"
-           onclick="showPage('about'); return false;">
-          About
-        </a>
+  <a href="#about"
+     data-page="about"
+     onclick="showPage('about'); closeMobileMenu(); return false;">
+    About
+  </a>
 
-        <a href="#medicines"
-           data-page="medicines"
-           onclick="showPage('medicines'); return false;">
-          Medicines
-        </a>
+  <a href="#medicines"
+     data-page="medicines"
+     onclick="showPage('medicines'); closeMobileMenu(); return false;">
+    Medicines
+  </a>
 
-        <a href="#guide"
-           data-page="guide"
-           onclick="showPage('guide'); return false;">
-          Cancer & Treatment Guide
-        </a>
+  <a href="#guide"
+     data-page="guide"
+     onclick="showPage('guide'); closeMobileMenu(); return false;">
+    Cancer & Treatment Guide
+  </a>
 
-        <a href="#insights"
-           data-page="insights"
-           onclick="showPage('insights'); return false;">
-          Insights
-        </a>
+  <a href="#insights"
+     data-page="insights"
+     onclick="showPage('insights'); closeMobileMenu(); return false;">
+    Insights
+  </a>
 
-        <a href="#contact"
-           data-page="contact"
-           onclick="showPage('contact'); return false;">
-          Get in Touch
-        </a>
-
-      </nav>
+  <a href="#contact"
+     data-page="contact"
+     onclick="showPage('contact'); closeMobileMenu(); return false;">
+    Get in Touch
+  </a>
+</nav>
     </div>
   </header>
 
