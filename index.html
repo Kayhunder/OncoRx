@@ -1199,23 +1199,91 @@
       }
     }
 
-    @media (max-width: 760px) {
-      .nav-container {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+   @media (max-width: 760px) {
 
-      nav {
-        width: 100%;
+  .nav-container {
+    min-height: 52px;
+    height: 52px;
 
-        justify-content: flex-start;
+    padding: 7px 14px;
 
-        gap: 13px 18px;
-      }
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 
-      nav a {
-        font-size: 0.7rem;
-      }
+    gap: 10px;
+  }
+
+  .brand {
+    font-size: 1.05rem;
+  }
+
+  nav {
+    width: auto;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    flex-wrap: nowrap;
+  }
+
+  nav a {
+    font-size: 0.62rem;
+    padding: 3px 0;
+
+    letter-spacing: 0.04em;
+  }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .hero-copy {
+    padding: 30px 25px;
+  }
+
+  .hero-copy h1 {
+    font-size: 2.6rem;
+  }
+
+  .page-header {
+    padding: 30px 25px;
+  }
+
+  .content-grid,
+  .message-grid,
+  .form-grid,
+  .card-grid,
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field.full {
+    grid-column: auto;
+  }
+
+  .platform-message {
+    padding: 25px;
+  }
+
+  .contact-info,
+  .contact-form-card {
+    padding: 25px;
+  }
+
+  .manager-toolbar {
+    left: 12px;
+    right: 12px;
+
+    width: auto;
+
+    transform: none;
+
+    justify-content: center;
+  }
+}
 
       .container {
         padding-left: 18px;
