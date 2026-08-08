@@ -1199,7 +1199,7 @@
       }
     }
 
-   @media (max-width: 760px) {
+    @media (max-width: 760px) {
 
   .nav-container {
     min-height: 52px;
@@ -3008,30 +3008,11 @@
         "#" + pageId
       );
 
-      const storyPageElement =
-  document.getElementById("oncorxStoryPage");
-
-if (storyPageElement) {
-
-  const header =
-    document.querySelector("header");
-
-  const headerHeight =
-    header
-      ? header.getBoundingClientRect().height
-      : 0;
-
-  const storyTop =
-    storyPageElement.getBoundingClientRect().top +
-    window.scrollY -
-    headerHeight -
-    12;
-
-  window.scrollTo({
-    top: Math.max(0, storyTop),
-    behavior: "smooth"
-  });
-}
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
 
 
     function loadInitialPage() {
@@ -3899,46 +3880,19 @@ Sent through the OncoRx website.`
         transform: translateX(4px);
       }
 
-     .oncorx-story-page {
-  display: none;
-
-  width: 100%;
-  min-height: 0;
-
-  position: static;
-
-  overflow: visible;
-}
-
-.oncorx-story-page.active {
-  display: block;
-}
-
-.oncorx-story-page .inner-page {
-  width: 100%;
-  padding-top: 28px;
-  padding-bottom: 40px;
-}
+      .oncorx-story-page {
+        min-height: 70vh;
+      }
 
       .oncorx-story {
-  width: 100%;
-  max-width: 900px;
-
-  margin: 0 auto;
-
-  padding: 18px 0 70px;
-
-  background: transparent;
-
-  border: 0;
-  border-radius: 0;
-
-  box-shadow: none;
-
-  position: static;
-
-  overflow: visible;
-}
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 46px 52px 56px;
+        background: rgba(255,255,255,.98);
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+      }
 
       .oncorx-story-header h1 {
         margin: 10px 0 16px;
@@ -4031,79 +3985,22 @@ Sent through the OncoRx website.`
         margin-top: 28px;
       }
 
-     @media (max-width: 700px) {
+      @media (max-width: 700px) {
 
-  .oncorx-story {
-    width: 100%;
-    max-width: none;
+        .oncorx-story {
+          padding: 30px 22px 38px;
+          border-radius: 20px;
+        }
 
-    margin: 0;
+        .oncorx-story-header h1 {
+          font-size: 2.35rem;
+        }
 
-    padding:
-      10px 0 55px;
+        .oncorx-story-body {
+          font-size: 1rem;
+        }
 
-    background: transparent;
-
-    border: 0;
-    border-radius: 0;
-
-    box-shadow: none;
-  }
-
-  .oncorx-story-page .inner-page {
-    padding:
-      20px 18px 35px;
-  }
-
-  .oncorx-story-header h1 {
-    font-size:
-      clamp(2rem, 9vw, 2.65rem);
-
-    line-height: 1.08;
-  }
-
-  .oncorx-story-subtitle {
-    font-size:
-      0.98rem;
-
-    line-height:
-      1.65;
-  }
-
-  .oncorx-story-body {
-    font-size:
-      1rem;
-
-    line-height:
-      1.78;
-  }
-
-  .oncorx-story-body h2 {
-    margin-top:
-      34px;
-
-    font-size:
-      1.45rem;
-  }
-
-  .oncorx-story-body p {
-    margin-bottom:
-      21px;
-  }
-
-  .oncorx-story-note {
-    margin-top:
-      32px;
-
-    padding:
-      18px 19px;
-  }
-
-  .oncorx-bottom-back {
-    margin-top:
-      24px;
-  }
-}
+      }
     `;
 
     document.head.appendChild(style);
