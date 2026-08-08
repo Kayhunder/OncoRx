@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OncoRx | Oncology Drug Insights</title>
+  <style>
+    :root {
+      --bg: #061423;
+      --surface: #0f1f36;
+      --surface-alt: #132a44;
+      --text: #eef5ff;
+      --muted: #a8bacd;
+      --primary: #3fa7ff;
+      --accent: #24d3b5;
+      --border: rgba(255,255,255,0.08);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(63,167,255,0.16), transparent 28%),
+                  radial-gradient(circle at 100% 40%, rgba(36,211,181,0.2), transparent 22%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(16px);
+      background: rgba(6,20,35,0.88);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    nav a { margin-left: 24px; font-size: 0.95rem; color: var(--muted); transition: color 0.2s ease; }
+    nav a:hover { color: var(--text); }
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 88px 0 56px;
+    }
+    .hero-content {
+      max-width: 660px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.78rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.9rem, 4vw, 4.8rem);
+      margin: 0;
+      line-height: 0.95;
+    }
+    .hero p {
+      margin: 24px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .button.primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #061423;
+    }
+    .button.secondary {
+      border: 1px solid rgba(255,255,255,0.16);
+      color: var(--text);
+    }
+    .button:hover { transform: translateY(-1px); }
+    .hero-cards {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .card {
+      padding: 26px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.18);
+      cursor: default;
+    }
+    .card h3 { margin: 0 0 10px; font-size: 1.08rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.98rem; }
+    section { padding: 72px 0; }
+    .section-title {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .section-title p { margin: 0; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.8rem; }
+    .section-title h2 { margin: 0; font-size: clamp(2rem, 2.6vw, 3.3rem); }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--surface-alt);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 28px;
+      min-height: 220px;
+      transition: transform 0.25s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(63,167,255,0.3); }
+    .feature-card h3 { margin-top: 0; font-size: 1.15rem; }
+    .feature-card p { color: var(--muted); margin-top: 14px; }
+    .highlight-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .highlight-card {
+      padding: 28px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .highlight-card h4 { margin: 0 0 12px; font-size: 1.05rem; }
+    .highlight-card p { margin: 0; color: var(--muted); }
+    .manager-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .manager-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.14);
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .manager-action:hover { background: rgba(255,255,255,0.12); }
+    .section-block {
+      position: relative;
+      scroll-margin-top: 100px;
+    }
+    .manager-controls {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      gap: 10px;
+      z-index: 2;
+    }
+    .manager-controls button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      transition: background 0.2s ease;
+    }
+    .manager-controls button:hover { background: rgba(255,255,255,0.14); }
+    .manager-mode .manager-controls { display: flex; }
+    .manager-mode [data-editable]:not(.placeholder) { outline: 2px dashed transparent; transition: outline 0.2s ease; }
+    .manager-mode [data-editable]:focus { outline: 2px dashed var(--primary); outline-offset: 6px; }
+    .page-view { display: none; }
+    .page-view.active { display: block; }
+    .page-back-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      cursor: pointer;
+      margin-bottom: 24px;
+    }
+    .page-back-btn:hover { background: rgba(255,255,255,0.08); }
+    .footer-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .footer-brand { font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { color: var(--muted); font-size: 0.94rem; }
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .form-grid input,
+    .form-grid textarea {
+      width: 100%;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font: inherit;
+      resize: vertical;
+    }
+    .form-grid textarea { min-height: 160px; grid-column: span 2; }
+    .form-grid button {
+      border: none;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #061423;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      grid-column: span 2;
+    }
+    @media (max-width: 900px) {
+      .hero-cards, .grid-3, .highlight-grid { grid-template-columns: 1fr; }
+      nav a { margin-left: 16px; }
+      .form-grid textarea { grid-column: span 1; }
+    }
+    @media (max-width: 640px) {
+      .nav-container { flex-direction: column; align-items: flex-start; }
+      .buttons { flex-direction: column; }
+      .manager-toolbar { justify-content: stretch; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-container">
+      <div class="brand">OncoRx</div>
+      <nav>
+        <a href="#home-page" onclick="showPage('home-page'); return false;">Home</a>
+        <a href="#home-page" onclick="showPage('home-page'); return false;">About</a>
+        <a href="#home-page" onclick="showPage('home-page'); return false;">Drugs</a>
+        <a href="#insights-page" onclick="showPage('insights-page'); return false;">Insights</a>
+        <a href="#contact-page" onclick="showPage('contact-page'); return false;">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <div class="manager-toolbar">
+      <button class="manager-action" onclick="openManager()">Manage content</button>
+    </div>
+
+    <div class="page-view active" id="home-page">
+      <section class="hero section-block" id="home">
+        <div class="hero-content">
+          <span class="eyebrow" data-editable="true">Oncology drug intelligence</span>
+          <h1 data-editable="true">Trusted oncology drug guidance for clinicians, pharmacists, and care teams.</h1>
+          <p data-editable="true">OncoRx brings focused oncology expertise to every clinician touchpoint. Discover precision drug profiles, therapy insights, real-world treatment trends, and supportive oncology innovations in one platform.</p>
+          <div class="buttons">
+            <button class="button primary" onclick="showPage('drugs-page')">Explore drugs</button>
+            <button class="button secondary" onclick="showPage('insights-page')">See insights</button>
+          </div>
+        </div>
+        <div class="hero-cards">
+          <article class="card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Clinical drug profiles</h3>
+            <p data-editable="true">Comprehensive summaries of chemotherapy, targeted therapy, immunotherapy, and supportive care agents built for oncology practice.</p>
+          </article>
+          <article class="card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Evidence-based platform</h3>
+            <p data-editable="true">Actionable oncology content for treatment planning, regimen selection, safety management, and multidisciplinary collaboration.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block" id="about">
+        <div class="manager-controls">
+          <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+          <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+        </div>
+        <div class="section-title">
+          <p data-editable="true">About OncoRx</p>
+          <h2 data-editable="true">Leading oncology drug education and insight.</h2>
+        </div>
+        <div class="highlight-grid">
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Purpose-built oncology platform</h4>
+            <p data-editable="true">OncoRx is designed for oncologists, oncology pharmacists, clinical researchers, and healthcare executives who need accurate, current drug information and practical oncology messaging.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">From drug discovery to patient care</h4>
+            <p data-editable="true">We connect the science of oncology drugs with the realities of treatment delivery by highlighting novel therapies, treatment sequencing, and supportive care pathways.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block" id="drugs">
+        <div class="manager-controls">
+          <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+          <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+        </div>
+        <div class="section-title">
+          <p data-editable="true">Therapy categories</p>
+          <h2 data-editable="true">Drug-focused content for oncology decision making.</h2>
+        </div>
+        <div class="grid-3">
+          <article class="feature-card section-block" onclick="showPage('targeted-agents-page')">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Targeted oncology agents</h3>
+            <p data-editable="true">Precision medicines that address molecular drivers, including kinase inhibitors, PARP inhibitors, and hormone receptor modulators.</p>
+          </article>
+          <article class="feature-card section-block" onclick="showPage('immunotherapy-page')">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Immunotherapy & biologics</h3>
+            <p data-editable="true">Immune checkpoint inhibitors, cellular therapies, and monoclonal antibodies that reshape modern oncology treatment paradigms.</p>
+          </article>
+          <article class="feature-card section-block" onclick="showPage('supportive-care-page')">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Supportive care & biosimilars</h3>
+            <p data-editable="true">Drug families that improve tolerability, manage symptoms, and support adherence through safer, cost-effective oncology care.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block" id="insights">
+        <div class="manager-controls">
+          <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+          <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+        </div>
+        <div class="section-title">
+          <p data-editable="true">Clinical insights</p>
+          <h2 data-editable="true">Meaningful oncology messaging for the healthcare community.</h2>
+        </div>
+        <div class="grid-3">
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Oncologist platform</h3>
+            <p data-editable="true">Expert content for physicians and multidisciplinary teams, with an emphasis on therapy selection, safety, and patient-centered care.</p>
+          </article>
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Data-driven updates</h3>
+            <p data-editable="true">Regular coverage of clinical trial milestones, regulatory approvals, and new drug launches to keep oncology staff current.</p>
+          </article>
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Local and global context</h3>
+            <p data-editable="true">OncoRx delivers relevant oncology drug intelligence that is clinically applicable in regional settings and aligned with international practice.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block" id="message">
+        <div class="manager-controls">
+          <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+          <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+        </div>
+        <div class="section-title">
+          <p data-editable="true">Platform message</p>
+          <h2 data-editable="true">What OncoRx shares with the oncology community.</h2>
+        </div>
+        <div class="highlight-grid">
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Drug education</h4>
+            <p data-editable="true">Detailed product insights, dosing principles, drug interactions, and safety checklists that help oncology teams make confident treatment decisions.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Practice support</h4>
+            <p data-editable="true">Resources that strengthen care coordination, therapy sequencing, and multidisciplinary communication across oncology services.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Innovation awareness</h4>
+            <p data-editable="true">Coverage of emerging oncology agents, immune-based regimens, and precision medicine strategies shaping the next generation of cancer care.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Patient-centered focus</h4>
+            <p data-editable="true">Clinical insights are framed around patient outcomes, quality of life, tolerability, and supportive therapies that preserve well-being during treatment.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="page-view" id="targeted-agents-page">
+      <button class="page-back-btn" onclick="showPage('home-page')">? Back to overview</button>
+      <div class="section-title">
+        <p>Targeted Oncology Agents</p>
+        <h2>Precision therapies aimed at molecular cancer drivers.</h2>
+      </div>
+      <p>Targeted oncology agents are designed to inhibit specific proteins or pathways that fuel tumor growth. These therapies often include kinase inhibitors, PARP inhibitors, monoclonal antibodies, and hormone receptor modulators. OncoRx highlights dosing nuances, resistance patterns, and combination strategies that support safer, more effective therapy choices.</p>
+      <p>Key clinical considerations include biomarker selection, patient eligibility, toxicity monitoring, and drug-drug interactions with supportive oncology regimens.</p>
+    </div>
+
+    <div class="page-view" id="immunotherapy-page">
+      <button class="page-back-btn" onclick="showPage('home-page')">? Back to overview</button>
+      <div class="section-title">
+        <p>Immunotherapy & Biologics</p>
+        <h2>Immune-based treatments shaping modern cancer care.</h2>
+      </div>
+      <p>Immunotherapies harness the body's immune system to recognize and destroy cancer cells. OncoRx covers checkpoint inhibitors, cellular therapies, and antibody-drug conjugates, emphasizing safety management, response assessment, and adverse event mitigation.</p>
+      <p>These therapies often require careful multidisciplinary coordination, including patient selection, immune-related toxicity monitoring, and supportive care to preserve quality of life during treatment.</p>
+    </div>
+
+    <div class="page-view" id="supportive-care-page">
+      <button class="page-back-btn" onclick="showPage('home-page')">← Back to overview</button>
+      <div class="section-title">
+        <p>Supportive Care & Biosimilars</p>
+        <h2>Improving tolerability, adherence, and care efficiency.</h2>
+      </div>
+      <p>Supportive care agents and biosimilars play a vital role in oncology by managing side effects, supporting nutrition, and preserving immune function. OncoRx explains how these therapies complement systemic cancer treatments and reduce the overall burden of care.</p>
+      <p>Best practices for supportive care include proactive symptom control, treatment continuity planning, and selecting biosimilar options that maintain efficacy while improving access and affordability.</p>
+    </div>
+
+    <div class="page-view" id="contact-page">
+      <button class="page-back-btn" onclick="showPage('home-page')">← Back to overview</button>
+      <section class="section-block" id="contact">
+        <div class="manager-controls">
+          <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+          <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+        </div>
+        <div class="section-title">
+          <p data-editable="true">Contact & request</p>
+          <h2 data-editable="true">Get in touch with the OncoRx team.</h2>
+        </div>
+        <div class="form-grid">
+          <input type="text" placeholder="Name" />
+          <input type="email" placeholder="Email" />
+          <input type="text" placeholder="Organization" />
+          <input type="text" placeholder="Focus area (e.g. oncology, pharmacy)" />
+          <textarea placeholder="How can OncoRx support your oncology practice?"></textarea>
+          <button type="button">Send request</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="page-view" id="insights-page">
+      <button class="page-back-btn" onclick="showPage('home-page')">← Back to overview</button>
+      <section class="section-block" id="insights-detail">
+        <div class="section-title">
+          <p data-editable="true">Clinical insights</p>
+          <h2 data-editable="true">Meaningful oncology messaging for the healthcare community.</h2>
+        </div>
+        <div class="grid-3">
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Oncologist platform</h3>
+            <p data-editable="true">Expert content for physicians and multidisciplinary teams, with an emphasis on therapy selection, safety, and patient-centered care.</p>
+          </article>
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Data-driven updates</h3>
+            <p data-editable="true">Regular coverage of clinical trial milestones, regulatory approvals, and new drug launches to keep oncology staff current.</p>
+          </article>
+          <article class="feature-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h3 data-editable="true">Local and global context</h3>
+            <p data-editable="true">OncoRx delivers relevant oncology drug intelligence that is clinically applicable in regional settings and aligned with international practice.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block" id="message">
+        <div class="section-title">
+          <p data-editable="true">Platform message</p>
+          <h2 data-editable="true">What OncoRx shares with the oncology community.</h2>
+        </div>
+        <div class="highlight-grid">
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Drug education</h4>
+            <p data-editable="true">Detailed product insights, dosing principles, drug interactions, and safety checklists that help oncology teams make confident treatment decisions.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Practice support</h4>
+            <p data-editable="true">Resources that strengthen care coordination, therapy sequencing, and multidisciplinary communication across oncology services.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Innovation awareness</h4>
+            <p data-editable="true">Coverage of emerging oncology agents, immune-based regimens, and precision medicine strategies shaping the next generation of cancer care.</p>
+          </div>
+          <div class="highlight-card section-block">
+            <div class="manager-controls">
+              <button onclick="event.stopPropagation(); toggleEdit(this)">Edit</button>
+              <button onclick="event.stopPropagation(); deleteSection(this)">Delete</button>
+            </div>
+            <h4 data-editable="true">Patient-centered focus</h4>
+            <p data-editable="true">Clinical insights are framed around patient outcomes, quality of life, tolerability, and supportive therapies that preserve well-being during treatment.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">OncoRx</div>
+        <p>Oncology drug insights, educational intelligence, and a platform for trusted oncology messaging.</p>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const oncoPassword = 'Pharma!';
+    let managerActive = false;
+    function openManager() {
+      const attempt = prompt('Enter the OncoRx editor password:');
+      if (attempt === null) return;
+      if (attempt === oncoPassword) {
+        managerActive = true;
+        document.body.classList.add('manager-mode');
+        document.querySelectorAll('.manager-controls').forEach(el => el.style.display = 'flex');
+        alert('Edit mode enabled. Use Edit to change text and Delete to remove sections.');
+      } else {
+        alert('Password incorrect.');
+      }
+    }
+    function toggleEdit(button) {
+      if (!managerActive) { alert('Enable content manager first.'); return; }
+      const section = button.closest('.section-block');
+      const isEditing = section.classList.contains('editing');
+      const editableNodes = section.querySelectorAll('[data-editable]');
+      if (!isEditing) {
+        section.classList.add('editing');
+        editableNodes.forEach(node => node.contentEditable = 'true');
+        button.textContent = 'Save';
+        section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        section.classList.remove('editing');
+        editableNodes.forEach(node => node.contentEditable = 'false');
+        button.textContent = 'Edit';
+      }
+    }
+    function deleteSection(button) {
+      if (!managerActive) { alert('Enable content manager first.'); return; }
+      const section = button.closest('.section-block');
+      const label = section.querySelector('h2, h3, h4, p')?.textContent || 'this block';
+      const confirmDelete = confirm(`Delete ${label.trim()}? This action cannot be undone in this session.`);
+      if (confirmDelete) {
+        section.remove();
+      }
+    }
+    function showPage(pageId) {
+      document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.classList.add('active');
+        window.location.hash = pageId;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.location.hash) {
+        const pageId = window.location.hash.replace('#', '');
+        const page = document.getElementById(pageId);
+        if (page) {
+          showPage(pageId);
+        }
+      }
+      window.addEventListener('hashchange', () => {
+        const pageId = window.location.hash.replace('#', '');
+        const page = document.getElementById(pageId);
+        if (page) {
+          showPage(pageId);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
